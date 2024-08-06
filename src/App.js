@@ -4,7 +4,7 @@ import HomePage from "./home/page/HomePage";
 
 function App() {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/hello-blog-react">
             <Routes>
                 <Route index element={<HomePage/>}/>
             </Routes>
