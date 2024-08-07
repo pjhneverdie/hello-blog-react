@@ -1,7 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
 /.pnp
 .pnp.js
 
@@ -22,4 +21,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .idea
+
+# 라이브러리는 코드 바뀔 때마다 도커 환경에서 재설치
+/node_modules
 package-lock.json
+
+# git pull 시 개인 설정 충돌 방지
+src/config/profile/profile.json
