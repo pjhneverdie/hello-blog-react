@@ -2,18 +2,24 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {
     Box,
     Flex,
-    Input, InputGroup, InputLeftElement,
+    Input,
+    InputGroup,
+    InputLeftElement,
     Progress,
     Text
 } from "@chakra-ui/react";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEnvelope, faLock} from "@fortawesome/free-solid-svg-icons";
+
 import {isValidEmail} from "../../../common/util/EmailValidator";
 import {ProfileContext} from "../../../config/profile/ProfileContext";
+import {useAuth} from "../AuthContext";
 
 function AuthModal(props) {
-
+    /**
+     * 프로필 데이터
+     */
     const profile = useContext(ProfileContext);
 
     /**
@@ -26,25 +32,19 @@ function AuthModal(props) {
      */
     const [isLoading, setIsLoading] = useState(false);
 
+    /**
+     * 아이디, 비밀번호 컨트롤러
+     */
     const idRef = useRef(null);
     const passwordRef = useRef(null);
 
+    /**
+     * 로그인 콘텍스트
+     */
+    const {sign} = useAuth();
+
     function toggleForm() {
         setIsLoginForm(!isLoginForm);
-    }
-
-    const handleIdKeyDown = (event) => {
-        const key = event.code;
-        if (key === "Enter") {
-            passwordRef.current.focus();
-        }
-    }
-
-    const handlePasswordDown = (event) => {
-        const key = event.code;
-        if (key === "Enter") {
-            validateForm();
-        }
     }
 
     function validateForm() {
@@ -66,9 +66,30 @@ function AuthModal(props) {
         return true;
     }
 
-    function onceValidated() {
-        idRef.current.setCustomValidity('');
-        passwordRef.current.setCustomValidity('');
+    const handleIdKeyDown = (event) => {
+        idRef.current.setCustomValidity("");
+
+        if (event.key === "Enter") {
+            passwordRef.current.focus();
+        }
+    }
+
+    const handlePasswordDown = async (event) => {
+        passwordRef.current.setCustomValidity("");
+
+        if (event.key === "Enter") {
+            if (validateForm()) {
+                setIsLoading(true);
+
+                const result = await sign(idRef.current.value, passwordRef.current.value, isLoginForm ? "signIn" : "signUp");
+
+                setIsLoading(false);
+
+                if (result) {
+                    props.setIsModalOpen(false);
+                }
+            }
+        }
     }
 
     useEffect(() => {
@@ -92,7 +113,7 @@ function AuthModal(props) {
                 {isLoading ? <Progress size='xs' isIndeterminate/> : <Progress size='xs' value={0}/>}
                 <Box h="10px"/>
                 <AuthForm idRef={idRef} passwordRef={passwordRef} onIdKeyDown={handleIdKeyDown}
-                          onPasswordKeyDown={handlePasswordDown} onceValidated={onceValidated}
+                          onPasswordKeyDown={handlePasswordDown}
                 />
                 <Box h="18.5px"/>
             </Flex>
@@ -126,7 +147,7 @@ function Header(props) {
 }
 
 
-function AuthForm({idRef, passwordRef, onIdKeyDown, onPasswordKeyDown, onceValidated}) {
+function AuthForm({idRef, passwordRef, onIdKeyDown, onPasswordKeyDown}) {
     return (
         <Flex direction={"column"}>
             <InputGroup>
@@ -136,7 +157,6 @@ function AuthForm({idRef, passwordRef, onIdKeyDown, onPasswordKeyDown, onceValid
                 <Input ref={idRef} color="#fde8ed"
                        placeholder="이메일" _placeholder={{color: "#fde8ed"}}
                        onKeyDown={onIdKeyDown}
-                       onInput={onceValidated}
                 />
             </InputGroup>
             <Box h="10px"/>
@@ -147,7 +167,6 @@ function AuthForm({idRef, passwordRef, onIdKeyDown, onPasswordKeyDown, onceValid
                 <Input type={"password"} ref={passwordRef} color="#fde8ed"
                        placeholder="비밀번호" _placeholder={{color: "#fde8ed"}}
                        onKeyDown={onPasswordKeyDown}
-                       onInput={onceValidated}
                 />
             </InputGroup>
         </Flex>

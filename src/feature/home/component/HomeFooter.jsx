@@ -57,7 +57,7 @@ function HomeFooter() {
                 로그인
             </Text>
             <Box ref={whitePoint2}>
-                <AuthModal isOpen={isModalOpen}/>
+                <AuthModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
             </Box>
 
         </Flex>
