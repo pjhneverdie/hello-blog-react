@@ -1,5 +1,8 @@
 import React, {createContext, useContext, useState, useEffect} from "react";
 import {ProfileContext} from "../../config/profile/ProfileContext";
+import {BASE_URL} from "../../common/const/data";
+import axios from "axios";
+import {authExceptionCode} from "./exception/auth_exception_code";
 
 const AuthContext = createContext(null);
 
@@ -9,45 +12,46 @@ export function AuthProvider({children}) {
 
     useEffect(() => {
         const storedAuthState = localStorage.getItem("member");
-        if (storedAuthState) {
+
+        if (storedAuthState != null) {
             setAuthState(JSON.parse(storedAuthState));
         }
+
     }, []);
 
     const sign = async (email, password, path) => {
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const response = await fetch("https://www.pjhneverdie.com/member/" + path, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({email, password}),
+            const response = await axios.post(`${BASE_URL}/member/${path}`, {
+                email: email,
+                password: password
             });
 
-            const data = await response.json();
+            const data = response.data;
 
-            if (response.ok) {
-                const memberData = {
-                    email: data.value.email,
-                    isOwner: data.value.email === profile.ownerEmail,
-                };
+            const memberData = {
+                email: data.value.email,
+                isOwner: data.value.email === profile.ownerEmail,
+            };
 
-                localStorage.setItem("member", JSON.stringify(memberData));
-                setAuthState(memberData);
+            localStorage.setItem("member", JSON.stringify(memberData));
+            setAuthState(memberData);
 
-                return true;
-            } else {
-
-            }
+            return true;
         } catch (exc) {
+            alert(authExceptionCode[exc.response.data.exceptionCode])
         }
 
         return false;
     };
 
-    const signOut = () => {
+    const signOut = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/member/signOut`)
+        } catch (exc) {
+        }
+
         localStorage.removeItem("member");
         setAuthState(null);
     };

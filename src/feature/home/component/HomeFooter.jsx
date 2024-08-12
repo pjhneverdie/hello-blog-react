@@ -2,8 +2,14 @@ import {Box, Flex, Text} from "@chakra-ui/react"
 import {Link} from '@chakra-ui/react'
 import {useState, useEffect, useRef} from "react";
 import AuthModal from "../../../app/auth/component/AuthModal";
+import {useAuth} from "../../../app/auth/AuthContext";
 
 function HomeFooter() {
+    /**
+     * 로그인 콘텍스트
+     */
+    const {authState, signOut} = useAuth();
+
     /**
      * 로그인 모달 visibility 상태 변수
      */
@@ -52,9 +58,9 @@ function HomeFooter() {
             </Link>
             <Box width="10px"/>
             <Text fontSize="15px" color="#6b6b6b" cursor="pointer" _hover={{color: "#000"}}
-                  ref={whitePoint1} onClick={signIn}
+                  ref={whitePoint1} onClick={authState != null ? signOut : signIn}
             >
-                로그인
+                {authState != null ? "로그아웃" : "로그인"}
             </Text>
             <Box ref={whitePoint2}>
                 <AuthModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>

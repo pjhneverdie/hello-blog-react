@@ -19,7 +19,7 @@ function MyLinks() {
         right: '0',
         bottom: '0',
         backgroundImage: `url('data:image/png;base64,${generateNoiseTexture()}')`, // Base64 encoded texture
-        opacity: 0.05,
+        opacity: 0.065,
         pointerEvents: 'none',
         zIndex: 0, // Place behind content
     };
