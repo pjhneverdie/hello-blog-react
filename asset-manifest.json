@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/hello-blog-react/static/css/main.e6c13ad2.css",
-    "main.js": "/hello-blog-react/static/js/main.c5d03674.js",
+    "main.css": "/hello-blog-react/static/css/main.8c852db3.css",
+    "main.js": "/hello-blog-react/static/js/main.cfbfddcc.js",
+    "static/media/OldLondon.ttf": "/hello-blog-react/static/media/OldLondon.a67214b49bb04c352ce8.ttf",
     "index.html": "/hello-blog-react/index.html",
-    "main.e6c13ad2.css.map": "/hello-blog-react/static/css/main.e6c13ad2.css.map",
-    "main.c5d03674.js.map": "/hello-blog-react/static/js/main.c5d03674.js.map"
+    "main.8c852db3.css.map": "/hello-blog-react/static/css/main.8c852db3.css.map",
+    "main.cfbfddcc.js.map": "/hello-blog-react/static/js/main.cfbfddcc.js.map"
   },
   "entrypoints": [
-    "static/css/main.e6c13ad2.css",
-    "static/js/main.c5d03674.js"
+    "static/css/main.8c852db3.css",
+    "static/js/main.cfbfddcc.js"
   ]
 }
