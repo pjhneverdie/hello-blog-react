@@ -3,17 +3,17 @@ import React from "react";
 
 function HomeTabBar() {
     return (
-        <Tabs variant="line">
+        <Tabs variant="line" width={"100%"}>
             <TabList>
                 <Tab mr={"25px"}
-                     fontSize={"15px"}
+                     fontSize={"17.5px"}
                      borderBottom={"1px"}
                      _selected={{color: "black", borderBottom: "1px solid black"}}
                      _focus={{boxShadow: "none"}}
                 >
                     Recent
                 </Tab>
-                <Tab fontSize={"15px"}
+                <Tab fontSize={"17.5px"}
                      display="inline-flex"
                      borderBottom={"1px"}
                      _selected={{color: "black", borderBottom: "1px solid black"}}

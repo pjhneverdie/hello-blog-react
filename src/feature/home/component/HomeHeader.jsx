@@ -33,8 +33,7 @@ function HomeHeader() {
 
     return (
         <Flex direction={"row"} justify={"space-between"} align={"center"}>
-            <Text fontSize="35px" fontFamily="'Monoton', cursive"
-                  cursor="pointer"
+            <Text fontSize={"45px"} fontFamily="OldLondon" cursor="pointer"
             >
                 {profile.blogName}
             </Text>

@@ -8,5 +8,8 @@ export const theme = extendTheme({
             },
         },
     },
+    fonts: {
+        heading: "inherit",
+        body: "inherit",
+    },
 })
-
