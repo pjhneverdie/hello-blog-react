@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBars, faFont} from "@fortawesome/free-solid-svg-icons";
+import {faBars, faFont, faGear, faGears} from "@fortawesome/free-solid-svg-icons";
 import {
     Box,
     Drawer,
@@ -15,6 +15,7 @@ import {
 
 import {ProfileContext} from "../../../config/profile/ProfileContext";
 import {useAuth} from "../../../app/auth/AuthContext";
+import {useNavigate} from "react-router-dom";
 
 function HomeHeader() {
     /**
@@ -31,14 +32,20 @@ function HomeHeader() {
 
     const {isOpen, onOpen, onClose} = useDisclosure()
 
+    const navigate = useNavigate();
+    const pushToAdmin = () => {
+        navigate('/admin');
+    };
+
     return (
         <Flex direction={"row"} justify={"space-between"} align={"center"}>
-            <Text fontSize={"45px"} fontFamily="OldLondon" cursor="pointer"
+            <Text fontSize={"37.5px"} fontFamily="OldLondon" cursor="pointer"
             >
                 {profile.blogName}
             </Text>
             <Flex direction={"row"} justify={"start"} align={"center"}>
-                {authState && isOwner ? <FontAwesomeIcon icon={faFont} fontSize={"25px"} cursor="pointer"
+                {authState && isOwner ? <FontAwesomeIcon icon={faGears} fontSize={"25px"}
+                                                         cursor="pointer" onClick={pushToAdmin}
                 /> : null}
                 <Box width={"20px"}/>
                 <FontAwesomeIcon icon={faBars} fontSize={"25px"} cursor="pointer" onClick={onOpen}

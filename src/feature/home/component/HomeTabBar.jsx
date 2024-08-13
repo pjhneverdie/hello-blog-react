@@ -1,32 +1,27 @@
-import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
+import {Divider, Tab, TabList, TabPanel, TabPanels, Tabs, Text} from "@chakra-ui/react";
 import React from "react";
 
 function HomeTabBar() {
     return (
-        <Tabs variant="line" width={"100%"}>
+        <Tabs variant="soft-rounded" colorScheme="red" width={"100%"}>
             <TabList>
                 <Tab mr={"25px"}
-                     fontSize={"17.5px"}
-                     borderBottom={"1px"}
-                     _selected={{color: "black", borderBottom: "1px solid black"}}
-                     _focus={{boxShadow: "none"}}
+                     fontSize={"13.5px"}
                 >
                     Recent
                 </Tab>
-                <Tab fontSize={"17.5px"}
-                     display="inline-flex"
-                     borderBottom={"1px"}
-                     _selected={{color: "black", borderBottom: "1px solid black"}}
-                     _focus={{boxShadow: "none"}}
+                <Tab fontSize={"13.5px"}
                 >
                     Category
                 </Tab>
             </TabList>
             <TabPanels>
                 <TabPanel>
+                    <Divider/>
                     <p>one!</p>
                 </TabPanel>
                 <TabPanel>
+                    <Divider/>
                     <p>two!</p>
                 </TabPanel>
             </TabPanels>

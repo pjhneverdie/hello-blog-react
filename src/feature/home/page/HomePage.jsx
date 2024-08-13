@@ -1,61 +1,53 @@
-import {Box, Center, Flex, Grid} from "@chakra-ui/react"
+import {Box, Center, Divider, Flex, Grid} from "@chakra-ui/react";
 import HomeFooter from "../component/HomeFooter";
 import HomeTabBar from "../component/HomeTabBar";
 import HomeHeader from "../component/HomeHeader";
 import MyLinks from "../component/MyLinks";
-import Divider from "../component/Divider";
+import React from "react";
 
 function HomePage() {
     return (
-        <Flex direction="column" justify="center" align="stretch" width={"100%"} height={"100%"}>
-            <Box paddingX={"25px"}>
+        <Flex direction="column" justify="center" align="stretch" width="100%" height="100%">
+            <Box paddingX="25px">
                 <HomeHeader/>
             </Box>
-            <Box paddingTop={"10px"}>
-                <MyLinks/>
-            </Box>
-            <Box paddingX={"25px"} paddingY={"20px"}>
-                <Divider/>
-            </Box>
-            <Box paddingX={"25px"}>
+            <MyLinks/>
+            <Box paddingX="60px">
                 <Grid
-                    templateColumns={{base: "1fr", lg: "1fr 2fr 1fr"}}
-                    gap={4}
+                    templateColumns={{
+                        base: "1fr",
+                        md: "1fr",
+                        lg: "70% 30%",
+                    }}
                     height="100vh"
-                    paddingX={{base: "20px", lg: "0px"}}
                 >
-                    <Box
-                        height="100%"
-                        boxShadow="0 0 0 0.5px black"
-                        display={{base: "none", lg: "block"}}
-                    >
-                        <Center>
-                            Left Content
-                        </Center>
-
+                    <Box height="100%" paddingRight={"75px"}>
+                        <Box paddingTop={"35px"}>
+                            <Center>
+                                <HomeTabBar/>
+                            </Center>
+                        </Box>
                     </Box>
-                    <Box height="100%">
-                        <Center>
-                            <HomeTabBar/>
-                        </Center>
-                    </Box>
-                    <Box
-                        height="100%"
-                        boxShadow="0 0 0 0.5px black"
-                        display={{base: "none", lg: "block"}}
+                    <Box height="100%"
+                         display={{
+                             base: "none", // 작은 화면에서는 숨김
+                             md: "none",   // 중간 크기에서는 숨김
+                             lg: "block",  // 큰 화면에서만 표시
+                         }}
                     >
-                        <Center>
-                            Right Content
-                        </Center>
+                        <Flex direction={"row"} align={"start"} height="100%">
+                            <Divider orientation="vertical"/>
+                            <Box paddingLeft={"40px"} paddingTop={"35px"}>
+                                <Center>
+                                    <HomeFooter/>
+                                </Center>
+                            </Box>
+                        </Flex>
                     </Box>
                 </Grid>
-                <Box paddingX={"25px"}>
-                    <HomeFooter/>
-                </Box>
             </Box>
         </Flex>
     );
 }
-
 
 export default HomePage;

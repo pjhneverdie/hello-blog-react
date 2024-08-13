@@ -5,7 +5,7 @@ import {Flex} from "@chakra-ui/react";
 function MyLinks() {
     const bannerStyle = {
         background: 'linear-gradient(to right, #FFF38F, #FFF38F, #FFE610, #FFA500)',
-        padding: '12.5px',
+        padding: '11.5px',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden', // Ensure the :before pseudo-element is contained
