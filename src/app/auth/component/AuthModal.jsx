@@ -12,7 +12,7 @@ import {
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEnvelope, faLock} from "@fortawesome/free-solid-svg-icons";
 
-import {isValidEmail} from "../../../common/util/EmailValidator";
+import {checkIsValidEmail} from "../../../common/util/emailValidator";
 import {ProfileContext} from "../../../config/profile/ProfileContext";
 import {useAuth} from "../AuthContext";
 
@@ -51,7 +51,7 @@ function AuthModal(props) {
         const email = idRef.current.value;
         const password = passwordRef.current.value;
 
-        if (!isValidEmail(email)) {
+        if (!checkIsValidEmail(email)) {
             idRef.current.setCustomValidity('유효한 이메일 주소를 입력하세요.');
             idRef.current.reportValidity();
             return false;

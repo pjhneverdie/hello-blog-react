@@ -2,7 +2,7 @@ import React, {createContext, useContext, useState, useEffect} from "react";
 import {ProfileContext} from "../../config/profile/ProfileContext";
 import {BASE_URL} from "../../common/const/data";
 import axios from "axios";
-import {authExceptionCode} from "./exception/auth_exception_code";
+import {authExceptionCode} from "./exception/authExceptionCode";
 
 const AuthContext = createContext(null);
 
@@ -11,7 +11,7 @@ export function AuthProvider({children}) {
     const [authState, setAuthState] = useState(null);
 
     useEffect(() => {
-        const storedAuthState = localStorage.getItem("member");
+        const storedAuthState = sessionStorage.getItem("member");
 
         if (storedAuthState != null) {
             setAuthState(JSON.parse(storedAuthState));
@@ -24,9 +24,13 @@ export function AuthProvider({children}) {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             const response = await axios.post(`${BASE_URL}/member/${path}`, {
-                email: email,
-                password: password
-            });
+                    email: email,
+                    password: password
+                },
+                {
+                    withCredentials: true,
+                },
+            );
 
             const data = response.data;
 
@@ -35,7 +39,7 @@ export function AuthProvider({children}) {
                 isOwner: data.value.email === profile.ownerEmail,
             };
 
-            localStorage.setItem("member", JSON.stringify(memberData));
+            sessionStorage.setItem("member", JSON.stringify(memberData));
             setAuthState(memberData);
 
             return true;
@@ -52,7 +56,7 @@ export function AuthProvider({children}) {
         } catch (exc) {
         }
 
-        localStorage.removeItem("member");
+        sessionStorage.removeItem("member");
         setAuthState(null);
     };
 

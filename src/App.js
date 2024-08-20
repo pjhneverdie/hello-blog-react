@@ -8,6 +8,20 @@ import AdminPage from "./feature/admin/page/AdminPage";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './App.css';
 
+
+(function() {
+    const originalSetItem = localStorage.setItem;
+
+    localStorage.setItem = function(key, value) {
+        const event = new Event('localStorageChange');
+        event.key = key;
+        event.newValue = value;
+        document.dispatchEvent(event);
+        originalSetItem.apply(this, arguments);
+    };
+
+})();
+
 const ProtectedRoute = ({ element }) => {
     const { authState } = useAuth();
     return authState && authState.isOwner ? element : <Navigate to="/" />;

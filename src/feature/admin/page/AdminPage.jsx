@@ -1,18 +1,17 @@
-import {Box, Center, Flex} from "@chakra-ui/react";
+import React, {useState} from 'react';
+import {Flex} from "@chakra-ui/react";
 import AdminPageSide from "../component/AdminPageSide";
-import CategoryController from "../component/CategoryController";
+import EditorPage from "./EditorPage";
 
 function AdminPage() {
+    const [selectedPage, setSelectedPage] = useState("edit");
+
     return (
-        <Flex direction={"row"} justify={"stretch"} width={"100%"} height={"100%"}>
-            <AdminPageSide/>
-            <Box width={"80%"} height={"100%"} paddingLeft={"80px"}>
-                <Center>
-                    <CategoryController/>
-                </Center>
-            </Box>
+        <Flex direction={"row"} width={"100vw"} height={"100vh"}>
+            <AdminPageSide setSelectedPage={setSelectedPage}/>
+            {selectedPage === "edit" && <EditorPage/>}
         </Flex>
     );
 }
 
-export default AdminPage
+export default AdminPage;
