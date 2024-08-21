@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Image, Input, IconButton } from '@chakra-ui/react';
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {faImage, faPlus} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function ImageUploadBox({ imageFile, setImageFile, thumbUrl }) {
@@ -43,7 +43,7 @@ function ImageUploadBox({ imageFile, setImageFile, thumbUrl }) {
             ) : (
                 <IconButton
                     aria-label="Upload Image"
-                    icon={<FontAwesomeIcon icon={faPlus} color={"#e78413"}/>}
+                    icon={<FontAwesomeIcon icon={faImage} color={"#e78413"}/>}
                     size="lg"
                     variant="outline"
                     borderRadius="full"

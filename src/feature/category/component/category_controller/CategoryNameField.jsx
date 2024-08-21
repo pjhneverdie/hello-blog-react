@@ -20,6 +20,7 @@ function CategoryNameField({name, setName}) {
             />
             <FormHelperText
                 fontSize={"12.5px"}
+                textAlign={"left"}
             >
                 카테고리명은 중복될 수 없습니다.
             </FormHelperText>

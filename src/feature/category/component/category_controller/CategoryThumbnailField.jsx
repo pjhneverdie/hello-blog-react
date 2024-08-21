@@ -17,6 +17,7 @@ function CategoryThumbnailField({imageFile, setImageFile, thumbUrl}) {
             />
             <FormHelperText
                 fontSize={"12.5px"}
+                textAlign={"left"}
             >
                 ! PNG · JPG · JPEG
             </FormHelperText>

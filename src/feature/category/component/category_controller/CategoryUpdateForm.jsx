@@ -34,6 +34,7 @@ function CategoryUpdateForm({selectedFolder, updateCategory}) {
     return (
         <Flex
             direction={"column"}
+            maxW={"800px"}
         >
             <Box
                 height={"10px"}

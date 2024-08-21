@@ -1,13 +1,23 @@
 import React, {useState, useEffect} from "react";
 import {
-    Box, Center, Divider, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text
+    AspectRatio,
+    Box,
+    Flex,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
+    Text
 } from "@chakra-ui/react";
 import CategoryAddForm from "./CategoryAddForm";
 import CategoryUpdateForm from "./CategoryUpdateForm";
 import {faTrashCan} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import PostEditor from "../../../post/component/PostForm/PostEditor";
-import PostAddForm from "../../../post/component/PostForm/PostAddForm";
+
+import PostThumbnailFiled from "../../../post/component/PostForm/PostThumbnailFiled";
+import PostTitleField from "../../../post/component/PostForm/PostTitleField";
 
 function CategoryController({
                                 selectedFolder,
@@ -36,7 +46,7 @@ function CategoryController({
         <Box
             paddingX={"20px"}
             pt={"20px"}
-            width={expanded ? "250%" : "100%"}
+            width={expanded ? "230%" : "100%"}
             height={expanded ? "150%" : "100%"}
             overflow={"scroll"}
             bg={"white"}
@@ -161,13 +171,21 @@ function CategoryController({
                         </TabPanels>
                     ) : selectedFolder.name ? (
                         <TabPanels>
-                            <TabPanel paddingX={"0px"}>
+                            <TabPanel
+                                paddingX={"0px"}
+                                justify={"center"}
+                                align={"center"}
+                            >
                                 <CategoryUpdateForm
                                     selectedFolder={selectedFolder}
                                     updateCategory={updateCategory}
                                 />
                             </TabPanel>
-                            <TabPanel paddingX={"0px"}>
+                            <TabPanel
+                                paddingX={"0px"}
+                                justify={"center"}
+                                align={"center"}
+                            >
                                 <CategoryAddForm
                                     selectedFolder={selectedFolder}
                                     addCategory={addCategory}
@@ -194,45 +212,70 @@ function CategoryController({
         ;
 }
 
-
 function PostController() {
+    const [isExpanded, setIsExpanded] = useState(false);
 
-    const [isWritingMode, setIsWritingMode] = useState(true);
-
-    const handleDividerClick = () => {
-        setIsWritingMode(!isWritingMode);
+    const toggleWidth = () => {
+        setIsExpanded(!isExpanded);
     };
+
 
     return (
         <Flex
             direction={"row"}
+            justify={"center"}
             align={"center"}
             width={"100%"}
             height={"100%"}
         >
-            <Box
-                width={isWritingMode ? "10%" : "35%"}
-                transition={"width 0.5s ease, height 0.5s ease"}
+            <AspectRatio
+                minW={"100px"}
+                maxW={"680px"}
+                width={isExpanded ? "50%" : "10%"}
+                transition="width 0.3s ease"
+                ratio={1}
+                onClick={toggleWidth}
             >
-                <PostAddForm />
-            </Box>
-            <Box width={"50px"} />
-            <Divider
-                orientation="vertical"
-                borderWidth={"5px"}
-                borderRadius={"xl"}
-                height={isWritingMode ? "40vh" : "80vh"}
-                transition={"height 0.5s ease"}
-                onClick={handleDividerClick}
-                cursor={"pointer"}
-            />
-            <Box width={"50px"} />
-            <Box flex={1}>
-                <PostEditor />
+                <Box
+                    bg={"white"}
+                    borderWidth={"1px"}
+                    borderRadius={"md"}
+                    cursor={"pointer"}
+                >
+                    <Flex
+                        direction={"column"}
+                        justify={"center"}
+                        align={"center"}
+                        width={"100%"}
+                    >
+                        <PostThumbnailFiled
+                            isExpanded={isExpanded}
+                        />
+                        <Box
+                            height={isExpanded ? "25px" : "15px"}
+                        />
+                        <Box
+                            maxW={"500px"}
+                            width={"80%"}
+                        >
+                            <PostTitleField
+                                isExpanded={isExpanded}
+                            />
+                        </Box>
+                    </Flex>
+                </Box>
+            </AspectRatio>
+            <Box width={"50px"}/>
+            <Box
+                flex={1}
+                bg={"white"}
+                borderWidth={"1px"}
+                borderRadius={"md"}
+            >
+                <PostEditor/>
             </Box>
         </Flex>
     );
-
 }
 
 export default CategoryController;

@@ -1,12 +1,7 @@
 import '@toast-ui/editor/dist/toastui-editor.css';
 import {Editor} from '@toast-ui/react-editor';
 import {
-    Box, Button, Modal, ModalBody,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay, Text,
-    useDisclosure
+    Box,
 } from "@chakra-ui/react";
 import React, {useRef, useState, useEffect} from 'react';
 
@@ -51,6 +46,10 @@ function PostEditor() {
                     .toastui-editor-popup-add-image .toastui-editor-tabs .tab-item.active {
                         color: #1A202C !important;
                         border-bottom: 2px solid #1A202C !important;
+                    }
+                    /* 테두리 없음 */
+                    .toastui-editor-defaultUI {
+                        border: none !important;
                     }
                 `}
             </style>
