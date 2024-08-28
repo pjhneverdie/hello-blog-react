@@ -28,7 +28,6 @@ function CategoryUpdateForm({selectedFolder, updateCategory}) {
         setParentId(selectedFolder.parentId);
         setName(selectedFolder.name);
 
-        console.log(parentId);
     }, [selectedFolder]);
 
     return (

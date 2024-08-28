@@ -24,7 +24,7 @@ function ImageUploadBox({ imageFile, setImageFile, thumbUrl }) {
         if (event.target.files && event.target.files.length > 0) {
             setImageFile(event.target.files[0]);
         } else {
-            setImageFile(null); // Reset the file if no file is selected
+            setImageFile(null);
         }
     };
 

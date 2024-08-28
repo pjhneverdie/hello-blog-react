@@ -39,6 +39,7 @@ function EditorPage() {
     const [isPostControlMode, setIsPostControlMode] = useState(false);
 
     const onFolderSelect = (id, name, thumbUrl, parentId, createdAt, postCount, isParent) => {
+
         setSelectedFolder({
             id: id,
             name: name,
@@ -168,6 +169,7 @@ function EditorPage() {
                         selectedFolder={selectedFolder}
                         setSelectedFolder={setSelectedFolder}
                         isExpanded={isExpanded}
+                        setIsExpanded={setIsExpanded}
                         isPostControlMode={isPostControlMode}
                         addCategory={addCategory}
                         updateCategory={updateCategory}

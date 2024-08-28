@@ -14,40 +14,62 @@ import CategoryAddForm from "./CategoryAddForm";
 import CategoryUpdateForm from "./CategoryUpdateForm";
 import {faTrashCan} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import PostEditor from "../../../post/component/PostForm/PostEditor";
+import PostEditor from "../../../post/component/postEditor/PostEditor";
 
-import PostThumbnailFiled from "../../../post/component/PostForm/PostThumbnailFiled";
+import PostThumbnailField from "../../../post/component/PostForm/PostThumbnailField";
 import PostTitleField from "../../../post/component/PostForm/PostTitleField";
+import PostController from "../../../post/component/PostController/PostController";
+import BlogCard from "../../../post/component/PostCard/PostCard";
 
 function CategoryController({
                                 selectedFolder,
                                 setSelectedFolder,
                                 isExpanded,
+                                setIsExpanded,
                                 isPostControlMode,
                                 addCategory,
                                 updateCategory,
                                 deleteCategory
                             }) {
-    const [expanded, setExpanded] = useState(false);
+
+    const [tabIndex, setTabIndex] = useState(0);
 
     useEffect(() => {
-        setExpanded(isExpanded);
-    }, [isExpanded]);
+        setTabIndex(0);
+
+        setIsExpanded(false);
+
+    }, [selectedFolder]);
+
 
     const handleTabChange = (index) => {
-        if (isPostControlMode) {
-            setExpanded(true);
+        setTabIndex(index);
+
+        if (isPostControlMode && index === 1) {
+            setIsExpanded(true);
         } else {
-            setExpanded(index === 2);
+            setIsExpanded(index === 2);
         }
+    };
+
+    const post = {
+        title: 'SOLID Principles in Flutter SOLID Principles in Flutter SOLID Principles in Flutter',
+        description: 'Enhancing Code Quality and Maintainability Through Five Key Design Principles.Enhancing Code Quality and Maintainability Through Five Key Design Principles.Enhancing Code Quality and Maintainability Through Five Key Design Principles.',
+        author: {
+            name: 'Syed Abdul Basit',
+            profilePicture: 'path_to_author_image.jpg'
+        },
+        date: 'Aug 12',
+        views: 265,
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/%ED%94%84%EB%A1%9C%ED%95%84%28%EC%A0%95%EB%A9%B4%29.jpg'
     };
 
     return (
         <Box
             paddingX={"20px"}
             pt={"20px"}
-            width={expanded ? "230%" : "100%"}
-            height={expanded ? "150%" : "100%"}
+            width={isExpanded ? "230%" : "100%"}
+            height={isExpanded ? "150%" : "100%"}
             overflow={"scroll"}
             bg={"white"}
             borderWidth={"1px"}
@@ -106,7 +128,7 @@ function CategoryController({
                         </Box>
                     </Flex> : "No Folder Selected"}
                 <Box height={"10px"}/>
-                <Tabs onChange={handleTabChange}>
+                <Tabs index={tabIndex} onChange={handleTabChange}>
                     <TabList>
                         {isPostControlMode ? (
                             <>
@@ -163,7 +185,7 @@ function CategoryController({
                     {isPostControlMode ? (
                         <TabPanels>
                             <TabPanel paddingX={"0px"}>
-                                게시글 목록
+                                <BlogCard {...post} />
                             </TabPanel>
                             <TabPanel paddingX={"0px"}>
                                 수정
@@ -192,7 +214,7 @@ function CategoryController({
                                 />
                             </TabPanel>
                             <TabPanel paddingX={"0px"}>
-                                <PostController/>
+                                <PostController selectedCategory={selectedFolder}/>
                             </TabPanel>
                         </TabPanels>
                     ) : (
@@ -212,71 +234,6 @@ function CategoryController({
         ;
 }
 
-function PostController() {
-    const [isExpanded, setIsExpanded] = useState(false);
-
-    const toggleWidth = () => {
-        setIsExpanded(!isExpanded);
-    };
-
-
-    return (
-        <Flex
-            direction={"row"}
-            justify={"center"}
-            align={"center"}
-            width={"100%"}
-            height={"100%"}
-        >
-            <AspectRatio
-                minW={"100px"}
-                maxW={"680px"}
-                width={isExpanded ? "50%" : "10%"}
-                transition="width 0.3s ease"
-                ratio={1}
-                onClick={toggleWidth}
-            >
-                <Box
-                    bg={"white"}
-                    borderWidth={"1px"}
-                    borderRadius={"md"}
-                    cursor={"pointer"}
-                >
-                    <Flex
-                        direction={"column"}
-                        justify={"center"}
-                        align={"center"}
-                        width={"100%"}
-                    >
-                        <PostThumbnailFiled
-                            isExpanded={isExpanded}
-                        />
-                        <Box
-                            height={isExpanded ? "25px" : "15px"}
-                        />
-                        <Box
-                            maxW={"500px"}
-                            width={"80%"}
-                        >
-                            <PostTitleField
-                                isExpanded={isExpanded}
-                            />
-                        </Box>
-                    </Flex>
-                </Box>
-            </AspectRatio>
-            <Box width={"50px"}/>
-            <Box
-                flex={1}
-                bg={"white"}
-                borderWidth={"1px"}
-                borderRadius={"md"}
-            >
-                <PostEditor/>
-            </Box>
-        </Flex>
-    );
-}
 
 export default CategoryController;
 

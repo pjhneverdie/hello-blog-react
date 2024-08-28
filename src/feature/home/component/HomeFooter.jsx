@@ -56,15 +56,15 @@ function HomeFooter() {
             >
                 &copy; https://github.com/hello-blog-JJ. All rights reserved.
             </Link>
-            <Box width="10px"/>
-            <Text fontSize="15px" color="#6b6b6b" cursor="pointer" _hover={{color: "#000"}}
-                  ref={whitePoint1} onClick={authState != null ? signOut : signIn}
-            >
-                {authState != null ? "로그아웃" : "로그인"}
-            </Text>
-            <Box ref={whitePoint2}>
-                <AuthModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
-            </Box>
+            {/*<Box width="10px"/>*/}
+            {/*<Text fontSize="15px" color="#6b6b6b" cursor="pointer" _hover={{color: "#000"}}*/}
+            {/*      ref={whitePoint1} onClick={authState != null ? signOut : signIn}*/}
+            {/*>*/}
+            {/*    {authState != null ? "로그아웃" : "로그인"}*/}
+            {/*</Text>*/}
+            {/*<Box ref={whitePoint2}>*/}
+            {/*    <AuthModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>*/}
+            {/*</Box>*/}
 
         </Flex>
     );

@@ -1,33 +1,48 @@
-import {Divider, Tab, TabList, TabPanel, TabPanels, Tabs, Text} from "@chakra-ui/react";
 import React from "react";
 
+import {Tab, TabList, TabPanel, TabPanels, Tabs, Box, Text, useBreakpointValue} from "@chakra-ui/react";
+
 function HomeTabBar() {
+
+    const homeTabFontSize = useBreakpointValue({base: "10px", md: "13.5px", lg: "13.5px"});
+    const homeTabGap = useBreakpointValue({base: "10px", md: "25px", lg: "25px"});
+
     return (
         <Tabs variant="soft-rounded" colorScheme="red" width={"100%"}>
             <TabList>
-                <Tab mr={"25px"}
-                     fontSize={"13.5px"}
+                <Tab marginRight={homeTabGap}
+                     _focus={{}}
                 >
-                    Recent
+                    <Text fontSize={homeTabFontSize}>
+                        Recent
+                    </Text>
                 </Tab>
-                <Tab fontSize={"13.5px"}
+                <Tab fontSize={homeTabFontSize}
+                     _focus={{}}
                 >
-                    Category
+                    <Text fontSize={homeTabFontSize}>
+                        Category
+                    </Text>
                 </Tab>
             </TabList>
             <TabPanels>
                 <TabPanel>
-                    <Divider/>
-                    <p>one!</p>
+                    <Box>
+                        {Array.from({length: 50}, (_, i) => (
+                            <p key={i}>Post {i + 1}</p>
+                        ))}
+                    </Box>
                 </TabPanel>
                 <TabPanel>
-                    <Divider/>
-                    <p>two!</p>
+                    <Box>
+                        {Array.from({length: 50}, (_, i) => (
+                            <p key={i}>Category {i + 1}</p>
+                        ))}
+                    </Box>
                 </TabPanel>
             </TabPanels>
         </Tabs>
-
     );
 }
 
-export default HomeTabBar
+export default HomeTabBar;
