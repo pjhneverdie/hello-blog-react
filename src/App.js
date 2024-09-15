@@ -1,6 +1,6 @@
 import {useRef, useState, useEffect} from "react";
 
-import {Route, Routes, BrowserRouter} from "react-router-dom";
+import {Routes, Route, BrowserRouter} from "react-router-dom";
 
 import {ChakraProvider} from "@chakra-ui/react";
 import {theme} from "./config/theme/Theme";
@@ -82,7 +82,7 @@ function App() {
                     <ChakraProvider theme={theme}>
                         <BrowserRouter basename={process.env.PUBLIC_URL}>
                             <Routes>
-                                <Route index element={<HomePage/>}/>
+                                <Route path="/" element={<HomePage/>}/>
                                 <Route path="/admin" element={<ProtectedRoute element={<AdminPage/>}/>}/>
                                 <Route path="/post/:id" element={<PostDetailPage/>}/>
                             </Routes>

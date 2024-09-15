@@ -11,21 +11,35 @@ function CategoryList({categories, setCategories, selectedCategory, handleSelect
 
     const {isLoading, getRootCategories, getSubCategories} = useCategoryApi();
 
-    useEffect(async () => {
+    useEffect(() => {
 
-        if (categories.length === 0) {
-            setCategories(await getRootCategories());
-        }
+        const fetchRootCategories = async () => {
+            if (categories.length === 0) {
+                const rootCategories = await getRootCategories();
+
+                if(rootCategories.length !==0){
+                    setCategories(rootCategories);
+                }
+            }
+        };
+
+        fetchRootCategories();
 
     }, [categories]);
 
-    useEffect(async () => {
+    useEffect(() => {
 
-        if (selectedCategory) {
-            setCategories(await getSubCategories(selectedCategory.id));
-        }
+        const fetchSubCategories = async () => {
+            if (selectedCategory) {
+                const subCategories = await getSubCategories(selectedCategory.id);
+                setCategories(subCategories);
+            }
+        };
+
+        fetchSubCategories();
 
     }, [selectedCategory]);
+
 
     const popButtonVisibility = useBreakpointValue({base: false, md: true, lg: true});
 
