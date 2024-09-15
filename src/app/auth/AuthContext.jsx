@@ -1,29 +1,46 @@
-import React, {createContext, useContext, useState, useEffect} from "react";
-import {ProfileContext} from "../../config/profile/ProfileContext";
-import {BASE_URL} from "../../common/const/data";
+import React, {createContext, useContext, useEffect, useState} from "react";
+
 import axios from "axios";
+
+import {BASE_URL} from "../../common/const/data";
+
 import {authExceptionCode} from "./exception/authExceptionCode";
+import {handleException} from "../../common/util/exceptionHandler";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({children}) {
-    const profile = useContext(ProfileContext);
-    const [authState, setAuthState] = useState(null);
 
-    useEffect(() => {
-        const storedAuthState = sessionStorage.getItem("member");
+    const [member, setMember] = useState(null);
 
-        if (storedAuthState != null) {
-            setAuthState(JSON.parse(storedAuthState));
+    async function me() {
+
+        const storedMember = sessionStorage.getItem("member");
+
+        if (sessionStorage.getItem("member")) {
+            try {
+                // 쿠키 기한 늘리기
+                await axios.get(`${BASE_URL}/member/me`,
+                    {
+                        withCredentials: true,
+                    },
+                );
+
+                setMember(JSON.parse(storedMember));
+            } catch (e) {
+                sessionStorage.removeItem("member");
+                setMember(null);
+            }
         }
 
-    }, []);
+    }
 
-    const sign = async (email, password, path) => {
+    const signIn = async (email, password) => {
+
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const response = await axios.post(`${BASE_URL}/member/${path}`, {
+            const response = await axios.post(`${BASE_URL}/member/signIn`, {
                     email: email,
                     password: password
                 },
@@ -32,41 +49,62 @@ export function AuthProvider({children}) {
                 },
             );
 
-            const data = response.data;
-
-            const memberData = {
-                email: data.value.email,
-                isOwner: data.value.email === profile.ownerEmail,
+            const member = {
+                email: response.data.value.email
             };
 
-            sessionStorage.setItem("member", JSON.stringify(memberData));
-            setAuthState(memberData);
+            sessionStorage.setItem("member", JSON.stringify(member));
+            setMember(member);
 
             return true;
-        } catch (exc) {
-            alert(authExceptionCode[exc.response.data.exceptionCode])
+        } catch (e) {
+            handleException(e, authExceptionCode);
         }
 
         return false;
+
     };
 
     const signOut = async () => {
+
         try {
-            const response = await axios.get(`${BASE_URL}/member/signOut`)
-        } catch (exc) {
+            await axios.get(`${BASE_URL}/member/signOut`);
+        } catch (e) {
+
         }
 
         sessionStorage.removeItem("member");
-        setAuthState(null);
+        setMember(null);
+
     };
 
+    useEffect(() => {
+
+        const handleMe = async () => {
+            await me();
+        };
+
+        handleMe();
+
+        return () => {
+            if (member) {
+                signOut();
+            }
+        };
+
+    }, []);
+
+
     return (
-        <AuthContext.Provider value={{authState, sign, signOut}}>
+        <AuthContext.Provider value={{authState: member, signIn, signOut}}>
             {children}
         </AuthContext.Provider>
     );
+
 }
 
 export function useAuth() {
+
     return useContext(AuthContext);
+
 }

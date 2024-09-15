@@ -1,11 +1,11 @@
-import '@toast-ui/editor/dist/toastui-editor.css';
-import {Editor} from '@toast-ui/react-editor';
-import {Box} from "@chakra-ui/react";
-import React, {useRef} from 'react';
-import {useAdminPostApi} from "../../hook/useAdminPostApi";
+import React from 'react';
 
-function PostEditor({editorRef}) {
-    const {uploadImage} = useAdminPostApi();
+import {Box} from "@chakra-ui/react";
+
+import {Editor} from '@toast-ui/react-editor';
+import '@toast-ui/editor/dist/toastui-editor.css';
+
+function PostEditor({markRef, handleUploadContentImageAsTemp}) {
 
     const customToolbarItems = [
         ['heading', 'bold', 'italic'],
@@ -19,7 +19,7 @@ function PostEditor({editorRef}) {
     return (
         <Box minWidth={"600px"}>
             <Editor
-                ref={editorRef}
+                ref={markRef}
                 width={"100%"}
                 height={"100vh"}
                 hideModeSwitch={true}
@@ -27,7 +27,7 @@ function PostEditor({editorRef}) {
                 initialEditType="markdown"
                 toolbarItems={customToolbarItems}
                 hooks={{
-                    addImageBlobHook: uploadImage
+                    addImageBlobHook: handleUploadContentImageAsTemp,
                 }}
             />
             <style>
@@ -42,20 +42,22 @@ function PostEditor({editorRef}) {
                     }
                     /* 확인 버튼을 남색으로 변경 */
                     .toastui-editor-defaultUI .toastui-editor-ok-button {
-                        background-color: #1A202C !important; /* 기본 핑크색 */
-                        color: #fff !important; /* 흰색 텍스트 */
-                        outline-color: #1A202C !important; /* 핑크색 외곽선 */
+                        background-color: #e78413 !important;
+                        color: #fff !important;
+                        outline-color: #e78413 !important;
                     }
                      /* 이미지 추가 팝업에서 활성화된 탭의 색상을 남색으로 변경 */
                     .toastui-editor-popup-add-image .toastui-editor-tabs .tab-item.active {
                         color: #1A202C !important;
-                        border-bottom: 2px solid #1A202C !important;
+                        border-bottom: 2px solid #e78413 !important;
                     }
                      /* 뷰어 이미지 16:9 가운데 정렬 */
                      .toastui-editor-contents img {
-                        width: 80%;
+                        width: 100%;
                         aspect-ratio: 16 / 9;
                         display: block;
+                        margin-top: 25px;
+                        margin-bottom: 25px;
                         margin-left: auto;
                         margin-right: auto;
                         object-fit: cover; 

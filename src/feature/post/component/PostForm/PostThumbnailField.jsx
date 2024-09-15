@@ -1,14 +1,30 @@
-import {AspectRatio, Box, FormControl, FormLabel, IconButton, Input, Image, Flex} from "@chakra-ui/react";
 import React, {useState, useEffect} from "react";
+
+import {
+    Box,
+    Flex,
+    Image,
+    IconButton,
+    AspectRatio,
+    Input,
+    FormLabel,
+    useBreakpointValue
+} from "@chakra-ui/react";
+
+
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faImage} from "@fortawesome/free-solid-svg-icons";
 
-function PostThumbnailField({isExpanded, imageFile, setImageFile, thumbUrl}) {
+function PostThumbnailField({isExpanded, thumbUrl, thumbImageFile, setThumbImageFile}) {
+
     const [previewUrl, setPreviewUrl] = useState(null);
 
+    const thumbnailFieldMaxWidth = useBreakpointValue({base: "110px", md: "110px", lg: "110px", xl: "180px"});
+
     useEffect(() => {
-        if (imageFile) {
-            const objectUrl = URL.createObjectURL(imageFile);
+
+        if (thumbImageFile) {
+            const objectUrl = URL.createObjectURL(thumbImageFile);
             setPreviewUrl(objectUrl);
 
             return () => {
@@ -17,49 +33,50 @@ function PostThumbnailField({isExpanded, imageFile, setImageFile, thumbUrl}) {
         } else {
             setPreviewUrl(null);
         }
-    }, [imageFile]);
+
+    }, [thumbImageFile]);
 
     const handleClick = (event) => {
+
         event.stopPropagation();
+
     };
 
-    const handleImageChange = (event) => {
+    function handleChangeThumbImageFile(event) {
+
         if (event.target.files && event.target.files.length > 0) {
-            setImageFile(event.target.files[0]);
+            setThumbImageFile(event.target.files[0]);
         } else {
-            setImageFile(null);
+            setThumbImageFile(null);
         }
+
     };
 
     return (
-        <Box
-            minW={"30px"}
-            maxW={"300px"}
-            width={isExpanded ? "80%" : "15%"}
-            transition="width 0.3s ease"
+        <Box minW={"37.5px"}
+             maxW={thumbnailFieldMaxWidth}
+             width={isExpanded ? "80%" : "30%"}
+             transition="width 0.3s ease"
         >
             <Flex direction={"column"}>
                 {isExpanded ? (
-                    <FormLabel
-                        width={"100%"}
-                        fontWeight={"normal"}
+                    <FormLabel width={"100%"}
+                               fontWeight={"normal"}
                     >
                         썸네일
                     </FormLabel>
                 ) : null}
-                <AspectRatio
-                    ratio={1}
-                    width={"100%"}
+                <AspectRatio ratio={1}
+                             width={"100%"}
                 >
-                    <Box
-                        width={"100%"}
-                        height={"100%"}
-                        bg={"white"}
-                        borderWidth={"1px"}
-                        borderRadius={"md"}
-                        textAlign="center"
-                        onClick={handleClick}
-                        position={"relative"}
+                    <Box position={"relative"}
+                         width={"100%"}
+                         height={"100%"}
+                         background={"white"}
+                         borderWidth={"1px"}
+                         borderRadius={"md"}
+                         textAlign="center"
+                         onClick={handleClick}
                     >
                         {previewUrl ? (
                             <Image
@@ -72,7 +89,7 @@ function PostThumbnailField({isExpanded, imageFile, setImageFile, thumbUrl}) {
                         ) : thumbUrl ? (
                             <Image
                                 src={thumbUrl}
-                                alt="Thumbnail Image"
+                                alt="Thumbnail"
                                 boxSize="100%"
                                 objectFit="cover"
                                 borderRadius="md"
@@ -100,7 +117,7 @@ function PostThumbnailField({isExpanded, imageFile, setImageFile, thumbUrl}) {
                             height="100%"
                             opacity="0"
                             cursor="pointer"
-                            onChange={handleImageChange}
+                            onChange={handleChangeThumbImageFile}
                         />
                     </Box>
                 </AspectRatio>

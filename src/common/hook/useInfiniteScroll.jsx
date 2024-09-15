@@ -1,56 +1,65 @@
-import {useState, useEffect, useRef, useCallback} from "react";
+import {useRef, useState, useEffect, useCallback} from "react";
+
 import axios from "axios";
 
-const useInfiniteScroll = (url, options = {}) => {
-    const {threshold = 0.1, initialPage = 1, perPage = 10} = options;
-    const [data, setData] = useState([]);
-    const [page, setPage] = useState(initialPage);
-    const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(false);
-    const observerRef = useRef(null);
+const useInfiniteScroll = (url, {data, setData, page, setPage, hasMore, setHasMore}) => {
 
-    const fetchData = useCallback(async () => {
-        if (loading) return;
-        setLoading(true);
+        const [isLoading, setIsLoading] = useState(false);
 
-        try {
-            const response = await axios.get(url, {
-                params: {page, perPage},
-            });
-            setData((prev) => [...prev, ...response.data]);
-            setHasMore(response.data.length > 0);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            setLoading(false);
-        }
-    }, [page, url, perPage, loading]);
+        const observerRef = useRef(null);
 
-    const observerCallback = useCallback(
-        (entries) => {
-            const [entry] = entries;
-            if (entry.isIntersecting && hasMore) {
+        async function fetchData() {
+
+            if (isLoading || !hasMore) return;
+            setIsLoading(true);
+
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            try {
+                const response = await axios.get(url, {
+                    params: {page, limit: 10},
+                });
+
+                setData((prev) => [...prev, ...response.data.value]);
+                setHasMore(response.data.value.length > 0);
                 setPage((prevPage) => prevPage + 1);
+
+            } catch (e) {
+            } finally {
+                setIsLoading(false);
             }
-        },
-        [hasMore]
-    );
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        }
 
-    useEffect(() => {
-        if (observerRef.current) observerRef.current.disconnect();
+        useEffect(() => {
 
-        const observer = new IntersectionObserver(observerCallback, {threshold});
+            if (data.length === 0) {
+                fetchData();
+            }
 
-        if (observerRef.current) observer.observe(observerRef.current);
+        }, [page]);
 
-        return () => observer.disconnect();
-    }, [observerCallback, threshold]);
+        useEffect(() => {
 
-    return {data, hasMore, loading, observerRef};
-};
+            if (!observerRef.current) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && hasMore && !isLoading) {
+                    fetchData();
+                }
+            });
+
+            observer.observe(observerRef.current);
+
+            return () => {
+                if (observerRef.current) observer.unobserve(observerRef.current);
+            };
+
+        }, [isLoading]);
+
+        return {observerRef, isLoading};
+    }
+;
 
 export default useInfiniteScroll;
+

@@ -1,13 +1,19 @@
-import {Flex, FormLabel, Input} from "@chakra-ui/react";
 import React from "react";
 
+import {Flex, Input, FormLabel} from "@chakra-ui/react";
+
 function PostTitleField({isExpanded, title, setTitle}) {
-    const handleChange = (e) => {
+
+    function handleChangeTitle  (e)  {
+
         setTitle(e.target.value);
+
     };
 
-    const handleClick = (event) => {
+    function handleClick (event) {
+
         event.stopPropagation();
+
     };
 
     return (
@@ -19,12 +25,11 @@ function PostTitleField({isExpanded, title, setTitle}) {
                     </FormLabel> :
                     null
             }
-            <Input
-                placeholder="Title"
-                value={title ?? ""}
-                onChange={handleChange}
-                _focus={{}}
-                onClick={handleClick}
+            <Input placeholder="Title"
+                   value={title ?? ""}
+                   onChange={handleChangeTitle}
+                   _focus={{}}
+                   onClick={handleClick}
             />
         </Flex>
     );

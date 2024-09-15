@@ -27,5 +27,6 @@ yarn-error.log*
 package-lock.json
 
 # git pull 시 개인 설정 충돌 방지
-src/config/profile/profile.json
+src/config/profile/profile.js
+src/config/profile/giscus.js
 src/common/const/data.js

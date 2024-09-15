@@ -1,18 +1,25 @@
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { ProfileProvider } from "./config/profile/ProfileContext";
-import { ChakraProvider } from "@chakra-ui/react";
-import { theme } from "./config/theme/Theme";
-import HomePage from "./feature/home/page/HomePage";
-import { AuthProvider, useAuth } from "./app/auth/AuthContext";
-import AdminPage from "./feature/admin/page/AdminPage";
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './App.css';
+import {useRef, useState, useEffect} from "react";
 
+import {Route, Routes, BrowserRouter} from "react-router-dom";
 
-(function() {
+import {ChakraProvider} from "@chakra-ui/react";
+import {theme} from "./config/theme/Theme";
+
+import {useAuth, AuthProvider} from "./app/auth/AuthContext";
+
+import {PostProvider} from "./feature/post/provider/PostProvider";
+import {CategoryProvider} from "./feature/category/provider/CategoryProvider";
+
+import HomePage from "./app/home/page/HomePage";
+import AdminPage from "./app/admin/page/AdminPage";
+import AuthModal from "./app/auth/component/AuthModal";
+import PostDetailPage from "./feature/post/page/PostDetailPage";
+
+(function () {
+
     const originalSetItem = localStorage.setItem;
 
-    localStorage.setItem = function(key, value) {
+    localStorage.setItem = function (key, value) {
         const event = new Event('localStorageChange');
         event.key = key;
         event.newValue = value;
@@ -22,46 +29,68 @@ import './App.css';
 
 })();
 
-const ProtectedRoute = ({ element }) => {
-    const { authState } = useAuth();
-    return authState && authState.isOwner ? element : <Navigate to="/" />;
+const ProtectedRoute = ({element}) => {
+
+    const {authState} = useAuth();
+
+    const modalRef = useRef(null);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+
+        const onClickOutSideOfAuthModal = (e) => {
+            if (
+                isModalOpen &&
+                modalRef.current &&
+                !modalRef.current.contains(e.target)
+            ) {
+                setIsModalOpen(false);
+                window.location.replace("/hello-blog-react");
+            }
+        };
+
+        document.addEventListener("mousedown", onClickOutSideOfAuthModal);
+
+        return () => {
+            document.removeEventListener("mousedown", onClickOutSideOfAuthModal);
+        };
+
+    }, [isModalOpen]);
+
+    if (!authState && !sessionStorage.getItem("member")) {
+
+        if (!isModalOpen) {
+            setIsModalOpen(true);
+        }
+
+        return <AuthModal modalRef={modalRef}
+                          isModalOpen={isModalOpen}
+                          setIsModalOpen={setIsModalOpen}/>;
+
+    }
+
+    return element;
 };
 
 function App() {
 
     return (
-        <ProfileProvider>
-            <AuthProvider>
-                <ChakraProvider theme={theme}>
-                    <BrowserRouter basename={process.env.PUBLIC_URL}>
-                        <AppRoutes/>
-                    </BrowserRouter>
-                </ChakraProvider>
-            </AuthProvider>
-        </ProfileProvider>
-    );
-}
-
-function AppRoutes() {
-    const location = useLocation();
-    return  (<Routes location={location}>
-        <Route index element={<HomePage />} />
-        <Route path="/admin" element={<ProtectedRoute element={<AdminPage />} />} />
-    </Routes>);
-
-    return (
-        <TransitionGroup>
-            <CSSTransition
-                key={location.key}
-                classNames="page-transition"
-                timeout={300}
-            >
-                <Routes location={location}>
-                    <Route index element={<HomePage />} />
-                    <Route path="/admin" element={<ProtectedRoute element={<AdminPage />} />} />
-                </Routes>
-            </CSSTransition>
-        </TransitionGroup>
+        <AuthProvider>
+            <PostProvider>
+                <CategoryProvider>
+                    <ChakraProvider theme={theme}>
+                        <BrowserRouter basename={process.env.PUBLIC_URL}>
+                            <Routes>
+                                <Route index element={<HomePage/>}/>
+                                <Route path="/admin" element={<ProtectedRoute element={<AdminPage/>}/>}/>
+                                <Route path="/post/:id" element={<PostDetailPage/>}/>
+                            </Routes>
+                        </BrowserRouter>
+                    </ChakraProvider>
+                </CategoryProvider>
+            </PostProvider>
+        </AuthProvider>
     );
 }
 
