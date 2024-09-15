@@ -236,7 +236,6 @@ function MusicPlayer() {
                 audioRef.current.pause();
             } else if (isLoaded) {
                 audioRef.current.play().catch((error) => {
-                    console.error("Playback failed: ", error);
                 });
                 setCurrentTime(audioRef.current.currentTime);
             }
@@ -275,7 +274,6 @@ function MusicPlayer() {
                 setCurrentTime(audioRef.current.currentTime);
                 if (isPlaying) {
                     audioRef.current.play().catch((error) => {
-                        console.error("Playback failed: ", error);
                     });
                 }
             };
@@ -287,7 +285,7 @@ function MusicPlayer() {
                 }
             };
         }
-    }, [currentMediaIndex, profileConfig.playlist, isPlaying]);
+    }, [currentMediaIndex, profileConfig.playlist]);
 
     useEffect(() => {
         if (audioRef.current && !isSliding) {
@@ -317,7 +315,7 @@ function MusicPlayer() {
                     <IconButton
                         background={"none"}
                         aria-label={isPlaying ? "Pause" : "Play"}
-                        icon={<FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />}
+                        icon={<FontAwesomeIcon icon={isPlaying ? faPause : faPlay}/>}
                         onClick={togglePlayPause}
                         mr={2}
                         _focus={{}}
@@ -333,13 +331,13 @@ function MusicPlayer() {
                         _focus={{}}
                     >
                         <SliderTrack background={"#0000003D"}>
-                            <SliderFilledTrack background={"#760c0c"} />
+                            <SliderFilledTrack background={"#760c0c"}/>
                         </SliderTrack>
-                        <SliderThumb _focus={{}} />
+                        <SliderThumb _focus={{}}/>
                     </Slider>
                 </Flex>
             </Flex>
-            <audio ref={audioRef} onEnded={handleNext} />
+            <audio ref={audioRef} onEnded={handleNext}/>
         </Box>
     );
 }

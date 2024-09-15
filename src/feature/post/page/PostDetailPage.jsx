@@ -8,7 +8,7 @@ import {
     Text,
     Divider,
     IconButton,
-    useBreakpointValue,
+    useBreakpointValue, Image, AspectRatio,
 } from "@chakra-ui/react";
 
 import {Viewer} from '@toast-ui/react-editor';
@@ -33,14 +33,6 @@ function PostDetailPage() {
     const {getPost} = usePostApi();
 
     const [post, setPost] = useState(location.state?.post);
-
-    const handleScrollToComment = () => {
-
-        if (commentSectionRef.current) {
-            commentSectionRef.current.scrollIntoView({behavior: "smooth"});
-        }
-
-    };
 
     useEffect(async () => {
 
@@ -98,11 +90,6 @@ function PostDetailPage() {
                         <Box height={"120px"}/>
                         <PostTitle post={post}/>
                         <Box paddingY={"20px"}>
-                            <Box paddingY={"20px"}>
-                                <AuthorInfo post={post}
-                                            scrollToComments={handleScrollToComment}
-                                />
-                            </Box>
                             <Divider borderWidth={"1px"}/>
                         </Box>
                         <Box height={"15px"}/>
@@ -212,7 +199,7 @@ function PostTitle({post}) {
 
 }
 
-function AuthorInfo({post, scrollToComments}) {
+function AuthorInfo({post}) {
 
     return (
         <Flex direction={"row"}
@@ -220,6 +207,20 @@ function AuthorInfo({post, scrollToComments}) {
               align={"center"}
         >
             <Flex direction={"row"}>
+                <AspectRatio ratio={1}
+                             width={"70px"}
+                             height={"70px"}
+                >
+                    <Box border={"2px solid black"}
+                    >
+                        <Image src={profileConfig.represent}
+                               alt="represent"
+                               boxSize="100%"
+                               objectFit="cover"
+                        />
+                    </Box>
+                </AspectRatio>
+                <Box width={"15px"}/>
                 <Flex direction={"column"}
                       justify={"space-between"}
                 >
@@ -234,24 +235,6 @@ function AuthorInfo({post, scrollToComments}) {
                         {post.createdAt}
                     </Text>
                 </Flex>
-            </Flex>
-            <Flex direction={"row"}
-                  align={"center"}
-            >
-                <IconButton padding={"10px"}
-                            icon={
-                                <Text color={"#e78413"}
-                                      fontSize={"20px"}
-                                      fontFamily={"OldLondon"}
-                                >
-                                    Comment
-                                </Text>
-                            }
-                            aria-label={"뒤로가기"}
-                            background={"transparent"}
-                            _hover={{bg: "gray.100"}}
-                            onClick={scrollToComments}
-                />
             </Flex>
         </Flex>
     );
