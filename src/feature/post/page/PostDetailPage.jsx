@@ -248,7 +248,6 @@ function PostContent({post}) {
             <Viewer initialValue={post.content}/>
             <style>
                 {`
-                     /* 뷰어 이미지 16:9 가운데 정렬 */
                      .toastui-editor-contents img {
                         width: 100%;
                         aspect-ratio: 16 / 9;
@@ -257,17 +256,15 @@ function PostContent({post}) {
                         margin-bottom: 25px;
                         margin-left: auto;
                         margin-right: auto;
-                        object-fit: cover; 
+                        object-fit: contain; 
                     }
-                    /* h1, h2 태그 밑줄 제거 */
                     .toastui-editor-contents h1, .toastui-editor-contents h2 {
                         border-bottom: none !important;
                     }
-                    /* toastui-editor-contents 폰트 사이즈 변경 */
                     .toastui-editor-contents {
                         margin: 0;
                         padding: 0;
-                        font-size: 17.5px; /* 폰트 사이즈 15px로 변경 */
+                        font-size: 17.5px;
                         font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', '나눔바른고딕',
                             'Nanum Barun Gothic', '맑은고딕', 'Malgun Gothic', sans-serif;
                         z-index: 20;

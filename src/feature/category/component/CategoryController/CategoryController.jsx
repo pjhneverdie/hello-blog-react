@@ -13,6 +13,7 @@ function CategoryController({
                                 addCategory,
                                 updateCategory,
                                 handleDeleteCategory,
+                                handleExtendControllerSize,
                             }) {
 
     /**
@@ -35,6 +36,7 @@ function CategoryController({
     useEffect(() => {
 
         handleSelectTab(0);
+        handleExtendControllerSize(false);
 
     }, [selectedCategory]);
 

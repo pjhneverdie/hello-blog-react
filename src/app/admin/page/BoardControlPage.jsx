@@ -238,6 +238,7 @@ function Controller({
                                       addCategory={addCategory}
                                       updateCategory={updateCategory}
                                       handleDeleteCategory={handleDeleteCategory}
+                                      handleExtendControllerSize={handleExtendControllerSize}
                 />}
         </Box>
     );

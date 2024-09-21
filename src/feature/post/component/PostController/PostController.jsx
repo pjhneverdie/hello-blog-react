@@ -323,6 +323,8 @@ function PostSaveController({
 
         let content = markRef.current.getInstance().getMarkdown();
 
+        console.log(content)
+
         if (contentImageTempUrls.length !== 0) {
             const relatedUrls = contentImageTempUrls.filter(url => content.includes(url));
 
