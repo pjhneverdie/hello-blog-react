@@ -37,6 +37,8 @@ function AuthModal({modalRef, isModalOpen, setIsModalOpen}) {
             setIsLoading(true);
 
             await signIn(idRef.current.value, passwordRef.current.value);
+
+            setIsLoading(false);
         }
     }
 

@@ -67,9 +67,23 @@ function PostEditor({markRef, handleUploadContentImageAsTemp}) {
                             'Nanum Barun Gothic', '맑은고딕', 'Malgun Gothic', sans-serif;
                         z-index: 20;
                     }
-                    .toastui-editor-md-link.toastui-editor-md-link-desc.toastui-editor-md-marked-text,
                     .toastui-editor-md-list-item-style.toastui-editor-md-list-item-odd {
-                        color: #e78413;
+                        color: black !important;
+                        font-weight: normal !important;
+                    }
+                    .toastui-editor-contents ul > li::before {
+                        margin-top: 13px !important;
+                        background-color: black !important;
+                    }
+                    .toastui-editor-contents ol > li::before {
+                        color: black !important;
+                    }
+                    .toastui-editor-contents ul p,
+                    .toastui-editor-contents ol p {                      
+                        margin-left: 0px !important;
+                        margin-right: 0px !important;
+                        margin-top: 0px !important;
+                        margin-bottom: 10px  !important;
                     }
                 `}
             </style>

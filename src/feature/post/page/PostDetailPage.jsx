@@ -70,7 +70,7 @@ function PostDetailPage() {
     }, [post]);
 
     const postPaddingX = useBreakpointValue({base: "20px", md: "0px", lg: "0px"});
-    const commentPaddingX = useBreakpointValue({base: "20px", md: "40px", lg: "80px"});
+    const commentPaddingX = useBreakpointValue({base: "20px", md: "0px", lg: "0px"});
 
     return (
         <Box width={"100vw"}
@@ -100,6 +100,7 @@ function PostDetailPage() {
                         />
                     </Box>
                     <Box paddingX={commentPaddingX}
+                         maxWidth={"700px"}
                          width={"100%"}
                     >
                         <Box height={"80px"}/>
@@ -268,6 +269,24 @@ function PostContent({post}) {
                         font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', '나눔바른고딕',
                             'Nanum Barun Gothic', '맑은고딕', 'Malgun Gothic', sans-serif;
                         z-index: 20;
+                    }
+                    .toastui-editor-md-list-item-style.toastui-editor-md-list-item-odd {
+                        color: black !important;
+                        font-weight: normal !important;
+                    }
+                    .toastui-editor-contents ul > li::before {
+                        margin-top: 13px !important;
+                        background-color: black !important;
+                    }
+                    .toastui-editor-contents ol > li::before {
+                        color: black !important;
+                    }
+                    .toastui-editor-contents ul p,
+                    .toastui-editor-contents ol p {                      
+                        margin-left: 0px !important;
+                        margin-right: 0px !important;
+                        margin-top: 0px !important;
+                        margin-bottom: 10px  !important;
                     }
                 `}
             </style>
