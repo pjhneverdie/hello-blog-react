@@ -8,13 +8,12 @@ import {
     Text,
     Divider,
     IconButton,
-    useBreakpointValue, Image, AspectRatio,
+    useBreakpointValue, VStack,
 } from "@chakra-ui/react";
 
 import {Viewer} from '@toast-ui/react-editor';
 
 import {giscusConfig} from "../../../config/profile/giscus";
-import {profileConfig} from "../../../config/profile/profile";
 
 import {usePostApi} from "../hook/usePostApi";
 
@@ -33,6 +32,43 @@ function PostDetailPage() {
     const {getPost} = usePostApi();
 
     const [post, setPost] = useState(location.state?.post);
+
+    // const [index, setIndex] = useState([]);
+
+    // useEffect(() => {
+    //     // Markdown 텍스트를 줄 단위로 나누고 헤드라인만 필터링
+    //     const headlines = post.content.split('\n').filter(line => line.startsWith('#'));
+    //     console.log(headlines);
+    //
+    //     const map = [];
+    //     let currentLevel1 = null;
+    //     let currentLevel2 = null;
+    //
+    //     headlines.forEach(heading => {
+    //         const level = heading.match(/^#+/)[0].length;
+    //         const title = heading.replace(/^#+\s*/, '');
+    //
+    //         if (level === 1) {
+    //             // Level 1 heading
+    //             currentLevel1 = {title, children: []};
+    //             map.push(currentLevel1);
+    //         } else if (level === 2) {
+    //             // Level 2 heading
+    //             currentLevel2 = {title, children: []};
+    //             if (currentLevel1) {
+    //                 currentLevel1.children.push(currentLevel2);
+    //             }
+    //         } else if (level === 3) {
+    //             // Level 3 heading
+    //             if (currentLevel2) {
+    //                 currentLevel2.children.push({title});
+    //             }
+    //         }
+    //     });
+    //
+    //     setIndex(map);
+    //
+    // }, [post]);
 
     useEffect(async () => {
 
@@ -78,6 +114,18 @@ function PostDetailPage() {
         >
             {post && <AppBar fromList={fromList}
             />}
+            {/*{post &&*/}
+            {/*    <Box position="fixed"*/}
+            {/*         top="120px"*/}
+            {/*         right="0"*/}
+            {/*         background={"black"}*/}
+            {/*         width="200px"*/}
+            {/*         marginRight="20px"*/}
+            {/*         alignSelf="flex-end"*/}
+            {/*    >*/}
+            {/*        <TableOfContents index={index}/>*/}
+            {/*    </Box>*/}
+            {/*}*/}
             {post && (
                 <Flex direction={"column"}
                       align={"center"}
@@ -112,6 +160,31 @@ function PostDetailPage() {
         </Box>
     );
 }
+
+// // 나중에 목차 만들 것!
+// function TableOfContents({index}) {
+//
+//     return (
+//         <VStack align="start" spacing={3}>
+//             {index.map((level1, idx1) => (
+//                 <Box key={idx1}>
+//                     <Text fontWeight="bold">{level1.title}</Text>
+//                     {level1.children.map((level2, idx2) => (
+//                         <Box pl={4} key={idx2}>
+//                             <Text>{level2.title}</Text>
+//                             {level2.children?.map((level3, idx3) => (
+//                                 <Box pl={4} key={idx3}>
+//                                     <Text>{level3.title}</Text>
+//                                 </Box>
+//                             ))}
+//                         </Box>
+//                     ))}
+//                 </Box>
+//             ))}
+//         </VStack>
+//     );
+//
+// }
 
 function AppBar({fromList}) {
 
@@ -200,48 +273,6 @@ function PostTitle({post}) {
 
 }
 
-function AuthorInfo({post}) {
-
-    return (
-        <Flex direction={"row"}
-              justify={"space-between"}
-              align={"center"}
-        >
-            <Flex direction={"row"}>
-                <AspectRatio ratio={1}
-                             width={"70px"}
-                             height={"70px"}
-                >
-                    <Box border={"2px solid black"}
-                    >
-                        <Image src={profileConfig.represent}
-                               alt="represent"
-                               boxSize="100%"
-                               objectFit="cover"
-                        />
-                    </Box>
-                </AspectRatio>
-                <Box width={"15px"}/>
-                <Flex direction={"column"}
-                      justify={"space-between"}
-                >
-                    <Text fontSize={"25px"}
-                          fontFamily={"OldLondon"}
-                    >
-                        {profileConfig.name.charAt(0).toUpperCase() + profileConfig.name.slice(1)}
-                    </Text>
-                    <Text fontSize={"15px"}
-                          fontFamily={"OldLondon"}
-                    >
-                        {post.createdAt}
-                    </Text>
-                </Flex>
-            </Flex>
-        </Flex>
-    );
-
-}
-
 function PostContent({post}) {
 
     return (
@@ -287,6 +318,20 @@ function PostContent({post}) {
                         margin-right: 0px !important;
                         margin-top: 0px !important;
                         margin-bottom: 10px  !important;
+                    }
+                    .toastui-editor-contents a {
+                        text-decoration: underline;
+                        color: #01a9ff !important;
+                    }
+                    .toastui-editor-contents a:hover {
+                        color: #01a9ff !important;
+                    }
+                    .toastui-editor-contents code {
+                        color: black;
+                        background-color: rgba(1,169,255, 0.1);
+                        padding: 2px 3px;
+                        letter-spacing: -0.3px;
+                        border-radius: 2px;
                     }
                 `}
             </style>

@@ -17,17 +17,16 @@ function PostEditor({markRef, handleUploadContentImageAsTemp}) {
 
     return (
         <Box minWidth={"600px"}>
-            <Editor
-                ref={markRef}
-                width={"100%"}
-                height={"100vh"}
-                hideModeSwitch={true}
-                previewStyle={"vertical"}
-                initialEditType="markdown"
-                toolbarItems={customToolbarItems}
-                hooks={{
-                    addImageBlobHook: handleUploadContentImageAsTemp,
-                }}
+            <Editor ref={markRef}
+                    width={"100%"}
+                    height={"100vh"}
+                    hideModeSwitch={true}
+                    previewStyle={"vertical"}
+                    initialEditType="markdown"
+                    toolbarItems={customToolbarItems}
+                    hooks={{
+                        addImageBlobHook: handleUploadContentImageAsTemp,
+                    }}
             />
             <style>
                 {`
@@ -35,7 +34,7 @@ function PostEditor({markRef, handleUploadContentImageAsTemp}) {
                         border: none !important;
                     }
                     .toastui-editor-contents .toastui-editor-md-preview-highlight::after {
-                        background-color: rgba(231, 132, 19, 0.6) !important;
+                        background-color: rgba(1,169,255, 0.1) !important;
                     }
                     .toastui-editor-defaultUI .toastui-editor-ok-button {
                         background-color: #e78413 !important;
@@ -45,6 +44,10 @@ function PostEditor({markRef, handleUploadContentImageAsTemp}) {
                     .toastui-editor-popup-add-image .toastui-editor-tabs .tab-item.active {
                         color: #e78413 !important;
                         border-bottom: 2px solid #e78413 !important;
+                    }
+                    .toastui-editor-popup-body input[type='text']:focus {
+                        outline: 1px solid #e78413 !important;
+                        border-color: transparent;
                     }
                      .toastui-editor-contents img {
                         width: 100%;
@@ -84,6 +87,27 @@ function PostEditor({markRef, handleUploadContentImageAsTemp}) {
                         margin-right: 0px !important;
                         margin-top: 0px !important;
                         margin-bottom: 10px  !important;
+                    }  
+                    .toastui-editor-contents code {
+                        color: black;
+                        background-color: rgba(1,169,255, 0.1);
+                        padding: 2px 3px;
+                        letter-spacing: -0.3px;
+                        border-radius: 2px;
+                    }
+                    .toastui-editor-md-code {
+                        color: black !important;
+                        background-color: rgba(1,169,255, 0.1) !important;
+                    }              
+                    .toastui-editor-md-link.toastui-editor-md-link-desc.toastui-editor-md-marked-text {
+                        color: #01a9ff !important;
+                    }
+                    .toastui-editor-contents a {
+                        text-decoration: underline;
+                        color: #01a9ff !important;
+                    }
+                    .toastui-editor-contents a:hover {
+                        color: #01a9ff !important;
                     }
                 `}
             </style>

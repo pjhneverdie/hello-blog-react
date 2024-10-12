@@ -64,6 +64,7 @@ function PostController({selectedCategory, handleExtendControllerSize}) {
             return;
         }
 
+        setSelectedPost(null);
         setTabIndex(index);
         handleExtendControllerSize(index > 0);
 
