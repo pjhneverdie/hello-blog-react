@@ -142,13 +142,13 @@ export const useAdminCategoryApi = () => {
                 localStorage.setItem(key, JSON.stringify(updatedList));
             };
 
-            const handleTopToTop = () => {
+            const handleRootToRoot = () => {
                 const filteredCategories = rootCategories.filter(category => category.id !== id);
                 const updatedCategories = [...filteredCategories, updatedCategory];
                 updateRootCategoriesStorage("root_categories", updatedCategories);
             };
 
-            const handleSubToTop = async () => {
+            const handleSubToRoot = async () => {
                 const subCategories = await getSubCategories(originParentId);
                 const filteredSubCategories = subCategories.filter(subcategory => subcategory.id !== id);
                 updateSubcategoriesStorage(`subcategories_${originParentId}`, filteredSubCategories);
@@ -157,7 +157,7 @@ export const useAdminCategoryApi = () => {
                 updateRootCategoriesStorage("root_categories", updatedCategories);
             };
 
-            const handleTopToSub = async () => {
+            const handleRootToSub = async () => {
                 const filteredCategories = rootCategories.filter(category => category.id !== id);
                 updateRootCategoriesStorage("root_categories", filteredCategories);
 
@@ -180,24 +180,27 @@ export const useAdminCategoryApi = () => {
             if (!updatedCategory.parentId) {
                 // 최상위 -> 최상위
                 if (!originParentId) {
-                    handleTopToTop();
+                    handleRootToRoot();
                 } else {
                     // 하위 -> 최상위
-                    await handleSubToTop();
+                    await handleSubToRoot();
                 }
             } else {
                 // 최상위 -> 하위
                 if (!originParentId) {
-                    await handleTopToSub();
+                    await handleRootToSub();
                 } else {
                     // 하위 -> 하위
                     await handleSubToSub();
                 }
             }
+
+            return updatedCategory;
         } catch (exc) {
             handleException(exc, categoryExceptionCode);
         }
 
+        return null;
     };
 
     const deleteCategory = async ({id, parentId}) => {

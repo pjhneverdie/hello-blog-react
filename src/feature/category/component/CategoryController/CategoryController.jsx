@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 
-import {Box, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text} from "@chakra-ui/react";
+import {Box, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue} from "@chakra-ui/react";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashCan} from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,7 @@ function CategoryController({
                                 selectedCategory,
                                 addCategory,
                                 updateCategory,
+                                setSelectedCategory,
                                 handleDeleteCategory,
                                 handleExtendControllerSize,
                             }) {
@@ -25,34 +26,34 @@ function CategoryController({
      * 탭 선택
      */
     const handleSelectTab = (index) => {
-
         setTabIndex(index);
-
     };
 
     /**
      * 카테고리를 변경할 때마다 탭 인덱스 초기화
      */
     useEffect(() => {
-
         handleSelectTab(0);
         handleExtendControllerSize(false);
-
     }, [selectedCategory]);
+
 
     return (
         <Flex direction={"column"}>
             <CategoryControllerHeader selectedCategory={selectedCategory}
-                                      setSelectedCategory={selectedCategory}
                                       handleDeleteCategory={handleDeleteCategory}
             />
             <Box height={"5px"}/>
-            <Tabs index={tabIndex} onChange={handleSelectTab}>
+            <Tabs isLazy
+                  index={tabIndex}
+                  onChange={handleSelectTab}
+            >
                 <CategoryControllerTabs selectedCategory={selectedCategory}/>
                 <CategoryControllerPanels tabIndex={tabIndex}
                                           selectedCategory={selectedCategory}
                                           addCategory={addCategory}
                                           updateCategory={updateCategory}
+                                          setSelectedCategory={setSelectedCategory}
                 />
             </Tabs>
         </Flex>
@@ -70,7 +71,7 @@ function CategoryControllerHeader({selectedCategory, handleDeleteCategory}) {
         >
             <Flex direction={"column"}>
                 <Text fontSize={"17.5px"}
-                      fontWeight={"bold"}
+                      fontWeight={"semibold"}
                       wordBreak={"break-word"}
                 >
                     {selectedCategory.name ?? "선택된 카테고리가 없습니다."}
@@ -129,7 +130,7 @@ function CategoryControllerTabs({selectedCategory}) {
 
 }
 
-function CategoryControllerPanels({tabIndex, selectedCategory, addCategory, updateCategory}) {
+function CategoryControllerPanels({tabIndex, selectedCategory, addCategory, updateCategory, setSelectedCategory}) {
 
     const panelStyles = {
         paddingX: "0px",
@@ -144,6 +145,7 @@ function CategoryControllerPanels({tabIndex, selectedCategory, addCategory, upda
                     <CategoryUpdateForm key={tabIndex}
                                         updateCategory={updateCategory}
                                         selectedCategory={selectedCategory}
+                                        setSelectedCategory={setSelectedCategory}
                     />
                 </TabPanel> : null
             }

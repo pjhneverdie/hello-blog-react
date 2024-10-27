@@ -1,128 +1,261 @@
-import React, {useEffect, useState} from "react";
+import {
+    Box,
+    Flex,
+    Text,
+    Center,
+    Tabs, TabPanel, TabPanels,
+    useColorModeValue, useBreakpointValue
+} from "@chakra-ui/react";
 
-import {Box, Divider, Flex, Grid, useBreakpointValue} from "@chakra-ui/react";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
-import HomeTabs from "../component/HomeTabs";
-import HomeHeader from "../component/HomeHeader";
-import HomeFooter from "../component/HomeFooter";
+import {BASE_URL} from "../../../common/const/data";
+import {darkTheme, lightTheme} from "../../../config/theme/Theme";
+
+import {usePostContext} from "../../../feature/post/provider/PostProvider";
+import {useCategoryContext} from "../../../feature/category/provider/CategoryProvider";
+
+import HomeAppBar, {Actions} from "../component/HomeAppBar";
+import PostList from "../../../feature/post/component/PostList/PostList";
+import CategoryList from "../../../feature/category/component/CategoryList/CategoryList";
+import HeartAnimation from "../component/HeartAnimation/HeartAnimation";
 
 function HomePage() {
 
-    const homePaddingX = useBreakpointValue({base: "0px", md: "0px", lg: "20px"});
-    const homeTabsWidth = useBreakpointValue({base: "95%", md: "95%", lg: "100%"});
-
-    const [scrollY, setScrollY] = useState(0);
-
-    const handleScroll = () => {
-
-        setScrollY(window.scrollY);
-
+    const varForUI = {
+        homePageBg: useColorModeValue(lightTheme.primaryWhite, darkTheme.primaryBlack),
+        useDividedActions: useBreakpointValue({base: true, md: false}),
     };
 
-    useEffect(() => {
+    const [tabIndex, setTabIndex] = useState(0);
 
-        window.addEventListener("scroll", handleScroll);
-
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-
-    }, []);
-
-    const translateYValue = Math.min(scrollY / 10, window.innerHeight / 2);
+    function handleTabChange(tabIndex) {
+        setTabIndex(tabIndex);
+    }
 
     return (
-        <Flex direction={"column"}
-              justify={"center"}
-              align={"center"}
-              width={"100%"}
-              height={"100%"}
+        /**
+         * 가로 무한, 최소 285px
+         * 높이 무한
+         */
+        <Box bg={varForUI.homePageBg}
+             width={"100vw"}
+             minWidth={"285px"}
+             minHeight={"100vh"}
         >
-            <BlankArea/>
-            <Box height={"15px"}/>
-            <Flex paddingX={homePaddingX}
-                  direction={"column"}
-                  justify={"center"}
-                  maxWidth={"1200px"}
+            {
+                /**
+                 * 가로 화면의 90% 차지, 최대 1080px까지 늘어남
+                 * 높이 70px 고정
+                 */
+            }
+            <Center paddingTop={"15px"}
+                    width={"100%"}
+                    height={"70px"}
+            >
+                <Box width={"90%"}
+                     height={"100%"}
+                     maxWidth={"1080px"}
+                >
+                    <HomeAppBar
+                        actions={
+                            <Actions
+                                tabIndex={tabIndex}
+                                handleTabChange={handleTabChange}
+                            />
+                        }
+                        handleLeadingClick={() => {
+                            window.location.reload();
+                        }}
+                    />
+                </Box>
+            </Center>
+            {
+                /**
+                 * 화면이 좁아지면 앱바의 Actions를 아래로 분리!
+                 */
+            }
+            {
+                varForUI.useDividedActions ? <ActionsOnlyWhenOnBase tabIndex={tabIndex}
+                                                                    handleTabChange={handleTabChange}
+                /> : null
+            }
+            {
+                /**
+                 * 탭패널이 남은 공간을 차지
+                 */
+            }
+            <Flex direction={"column"}
+                  alignItems={"center"}
                   width={"100%"}
                   height={"100%"}
             >
-                <HomeHeader/>
-                <Box height={"5px"}/>
-                <Box>
-                    <Grid templateColumns={{
-                        base: "1fr",
-                        md: "1fr",
-                        lg: "70% 30%",
-                    }}
-                          height="100vh"
-                    >
-                        <Flex paddingTop={"20px"}
-                              direction={"column"}
-                              justify="stretch"
-                              align="center"
-                              width="100%"
-                              height="100%"
-                        >
-                            <Box width={homeTabsWidth}>
-                                <HomeTabs/>
-                            </Box>
-                        </Flex>
-                        <Box height="100%"
-                             display={{
-                                 base: "none",
-                                 md: "none",
-                                 lg: "block",
-                             }}
-                        >
-                            <Flex paddingTop={"20px"}
-                                  direction={"row"}
-                                  align={"start"}
-                                  height="100%"
-                            >
-                                <Divider orientation={"vertical"}
-                                         borderWidth={"1px"}
-                                />
-                                <Box paddingLeft={"20px"}
-                                     height={"100%"}
-                                >
-                                    <Box position="sticky"
-                                         top="5"
-                                         style={{
-                                             transform: `translateY(${translateYValue}px)`,
-                                             transition: "transform 0.3s ease-out",
-                                         }}
-                                    >
-                                        <HomeFooter/>
-                                    </Box>
-                                </Box>
-                            </Flex>
-                        </Box>
-                    </Grid>
-                </Box>
-
+                <TabsAndPanels tabIndex={tabIndex}
+                               handleTabChange={handleTabChange}
+                />
             </Flex>
-        </Flex>
+        </Box>
     );
+
 }
 
-function BlankArea() {
-
-    const blankAreaHeight = useBreakpointValue({base: "0px", md: "0px", lg: "110px"});
-
-    const styles = {
-        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='58' viewBox='0 0 42 58'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath fill-rule='evenodd' d='M12 18h12v18h6v4H18V22h-6v-4zm-6-2v-4H0V0h36v6h6v36h-6v4h6v12H6v-6H0V16h6zM34 2H2v8h24v24h8V2zM6 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm8 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm8 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm8 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM2 50h32v-8H10V18H2v32zm28-6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0-8a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0-8a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0-8a2 2 0 1 0 0 4 2 2 0 0 0 0-4z'/%3E%3C/g%3E%3C/svg%3E\")"
-    };
+function ActionsOnlyWhenOnBase({tabIndex, handleTabChange}) {
 
     return (
-        <Box
-            width={"100%"}
-            height={blankAreaHeight}
-            background={"#f8f8f8"}
-            backgroundImage={styles.backgroundImage}
-        />
+        /**
+         * 가로 화면의 90% 차지, 최대 1080px까지 늘어남
+         * 높이 70px 고정
+         */
+        <Center width={"100%"}
+                height={"70px"}
+        >
+            <Box width={"90%"}
+                 height={"100%"}
+                 maxWidth={"1080px"}
+            >
+                <Actions tabIndex={tabIndex}
+                         handleTabChange={handleTabChange}
+                />
+            </Box>
+        </Center>
     );
+
+}
+
+function TabsAndPanels({tabIndex, handleTabChange}) {
+
+    const varForUI = {
+        tabBg: useColorModeValue(lightTheme.primaryWhite, darkTheme.primaryBlack),
+        actionLabelStyles: {
+            color: useColorModeValue(lightTheme.primaryBlack, darkTheme.primaryWhite),
+            fontSize: "2.50rem",
+            fontWeight: "bold",
+        },
+    };
+
+    const navigate = useNavigate();
+
+    const {
+        posts,
+        setPosts,
+        page,
+        setPage,
+        hasMore,
+        setHasMore,
+        postApiURL,
+        setPostApiURL,
+        clearPost
+    } = usePostContext();
+
+    const handleSelectPost = (post) => {
+        navigate(`/post/${post.id}`, {state: {post}});
+    };
+
+    const {
+        categories,
+        setCategories,
+        categoryStack,
+        setCategoryStack,
+        selectedCategory,
+        setSelectedCategory
+    } = useCategoryContext();
+
+    function handleSelectCategory(category) {
+        /**
+         * 하위 카테고리가 없으면 바로 게시글을 로드!
+         */
+        if (category.childCategoryCount === 0) {
+            clearPost();
+            setPostApiURL(`${BASE_URL}/post/category/${category.id}`);
+            handleTabChange(0);
+        } else {
+            if (category.id === selectedCategory?.id) {
+                clearPost();
+                setPostApiURL(`${BASE_URL}/post/category/${category.id}`);
+                handleTabChange(0);
+                return;
+            }
+
+            setCategoryStack(prevStack => [...prevStack, category]);
+            setSelectedCategory(category);
+        }
+    }
+
+    function popCategory() {
+        if (postApiURL !== `${BASE_URL}/post/recent`) {
+            clearPost();
+        }
+
+        const newStack = [...categoryStack];
+        newStack.pop();
+
+        setCategoryStack(newStack);
+
+        /**
+         * 뒤로가기 시 선택된 카테고리를 부모 카테고리로 바꿈
+         */
+        const parent = newStack[newStack.length - 1] || null;
+
+        if (parent && categoryStack.length > 0) {
+            setSelectedCategory(parent);
+        } else {
+            /**
+             * 루트로 이동하는 경우 스택 초기화
+             */
+            setCategoryStack([]);
+            setSelectedCategory(null);
+            setCategories([]);
+        }
+    }
+
+    return (
+        /**
+         * 게시글, 카테고리 로드를 위한 프레임
+         * 최대 720px 선에서 화면의 90프로를 차지!
+         */
+        <Tabs bg={varForUI.tabBg}
+              borderColor={varForUI.tabBg}
+              index={tabIndex}
+              width={"90%"}
+              maxWidth={"720px"}
+        >
+            <TabPanels>
+                <TabPanel paddingX={"0px"}>
+                    <Text {...varForUI.actionLabelStyles}>
+                        Posts
+                    </Text>
+                    <PostList posts={posts}
+                              setPosts={setPosts}
+                              page={page}
+                              setPage={setPage}
+                              hasMore={hasMore}
+                              setHasMore={setHasMore}
+                              handleSelectPost={handleSelectPost}
+                              url={postApiURL}
+                              isAdmin={false}
+                    />
+                </TabPanel>
+                <TabPanel paddingX={"0px"}>
+                    <Text {...varForUI.actionLabelStyles}>
+                        Categories
+                    </Text>
+                    <CategoryList categories={categories}
+                                  setCategories={setCategories}
+                                  selectedCategory={selectedCategory}
+                                  handleSelectCategory={handleSelectCategory}
+                                  popCategory={popCategory}
+                    />
+                </TabPanel>
+                <TabPanel paddingX={"0px"}>
+                    <Text {...varForUI.actionLabelStyles}>
+                        About Me
+                    </Text>
+                </TabPanel>
+            </TabPanels>
+        </Tabs>
+    );
+
 }
 
 export default HomePage;
-

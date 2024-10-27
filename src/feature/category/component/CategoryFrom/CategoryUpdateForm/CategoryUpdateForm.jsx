@@ -6,7 +6,7 @@ import CategoryNameField from "../CategoryNameField";
 import CategoryParentField from "../CategoryParentField";
 import CategoryThumbnailField from "../CategoryThumbnailField";
 
-function CategoryUpdateForm({selectedCategory, updateCategory}) {
+function CategoryUpdateForm({selectedCategory, updateCategory, setSelectedCategory}) {
 
     const [parentId, setParentId] = useState(selectedCategory.parentId);
 
@@ -16,11 +16,10 @@ function CategoryUpdateForm({selectedCategory, updateCategory}) {
 
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
 
-    async function update() {
-
+    async function handleUpdateCategory() {
         setIsLoading(true);
 
-        await updateCategory({
+        const updatedCategory = await updateCategory({
             id: selectedCategory.id,
             name: name,
             thumbUrl: selectedCategory.thumbUrl,
@@ -29,8 +28,11 @@ function CategoryUpdateForm({selectedCategory, updateCategory}) {
             originParentId: selectedCategory.parentId,
         });
 
-        setIsLoading(false);
+        if(updatedCategory){
+            setSelectedCategory(updatedCategory);
+        }
 
+        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -68,7 +70,7 @@ function CategoryUpdateForm({selectedCategory, updateCategory}) {
                         _focus={{}}
                         _hover={{bgColor: "#cf7000"}}
                         _active={{bgColor: "#b65f00"}}
-                        onClick={update}
+                        onClick={handleUpdateCategory}
                 >
                     {isLoading ? (
                         <Spinner size="sm"

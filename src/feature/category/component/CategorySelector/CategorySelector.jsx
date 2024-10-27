@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {Box, Flex, UnorderedList, ListItem, Tooltip} from "@chakra-ui/react";
+import {Box, Flex, UnorderedList, ListItem, Tooltip, Text, useColorModeValue} from "@chakra-ui/react";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFolder, faFolderOpen} from "@fortawesome/free-solid-svg-icons";
@@ -38,8 +38,10 @@ const TreeNode = ({node, getSubCategories, handleSelectCategory}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [children, setChildren] = useState([]);
 
+    /**
+     * 해당 카테고리의 하위 카테고리를 불러오는 메서드
+     */
     const handleGetSubCategories = async () => {
-
         if (node.isParent) {
             handleSelectCategory(node.id, node.name, node.thumbUrl, node.parentId, node.createdAt, node.postCount, true);
             return;
@@ -56,11 +58,12 @@ const TreeNode = ({node, getSubCategories, handleSelectCategory}) => {
         setIsOpen(!isOpen);
 
         handleSelectCategory(node.id, node.name, node.thumbUrl, node.parentId, node.createdAt, node.postCount, false);
-
     };
 
+    /**
+     * 새 카테고리 추가 및 수정 시 그대로 트리에 반영
+     */
     useEffect(() => {
-
         const handleStorageChange = (event) => {
             if (event.key === `subcategories_${node.id}`) {
                 const updatedSubCategories = JSON.parse(event.newValue);
@@ -77,7 +80,6 @@ const TreeNode = ({node, getSubCategories, handleSelectCategory}) => {
         return () => {
             document.removeEventListener("localStorageChange", handleStorageChange);
         };
-
     }, [node.id]);
 
     return (
@@ -121,11 +123,15 @@ const TreeNode = ({node, getSubCategories, handleSelectCategory}) => {
                     <FontAwesomeIcon icon={isOpen ? faFolderOpen : faFolder}
                                      style={{marginRight: '12px', color: '#e78413'}}
                     />
-                    {node.isParent ? `${node.postCount}개의 게시글` : node.name}
+                    <Text>
+                        {node.isParent ? `${node.postCount}개의 게시글` : node.name}
+                    </Text>
                 </Flex>
             </Tooltip>
             {isOpen && (
-                <UnorderedList ml={4} styleType="none">
+                <UnorderedList ml={4}
+                               styleType="none"
+                >
                     {children.map((child, index) => (
                         <TreeNode key={child.id}
                                   node={child}

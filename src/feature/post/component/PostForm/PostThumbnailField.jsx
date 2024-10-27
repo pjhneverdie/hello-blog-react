@@ -66,7 +66,7 @@ function PostThumbnailField({isExpanded, thumbUrl, thumbImageFile, setThumbImage
                         썸네일
                     </FormLabel>
                 ) : null}
-                <AspectRatio ratio={1}
+                <AspectRatio ratio={16 / 9}
                              width={"100%"}
                 >
                     <Box position={"relative"}

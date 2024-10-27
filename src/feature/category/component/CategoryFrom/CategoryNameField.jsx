@@ -17,7 +17,7 @@ function CategoryNameField({name, setName}) {
                    onChange={handleChange}
                    _focus={{}}
             />
-            <FormHelperText fontSize={"12.5px"}
+            <FormHelperText fontSize={"13px"}
                             textAlign={"left"}
             >
                 카테고리명은 중복될 수 없습니다.

@@ -1,81 +1,71 @@
-import React from 'react';
+import {AspectRatio, Box, Flex, Image, Text, useColorModeValue} from "@chakra-ui/react";
 
-import {Box, Flex, Text, Image, AspectRatio, useBreakpointValue} from '@chakra-ui/react';
+import {commonTheme, darkTheme, lightTheme} from "../../../../config/theme/Theme";
 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClock} from "@fortawesome/free-solid-svg-icons";
+import {extractPlainText} from "../../../../common/util/mdUtil";
+import {formatLocalDateTime} from "../../../../common/util/dateUtil";
 
-import {profileConfig} from "../../../../config/profile/profile";
+function PostCard({title, content, thumbUrl, createdAt, isAdmin}) {
 
-const PostCard = ({title, content, thumbUrl, createdAt}) => {
-
-    return (
-        <Flex direction={"column"}
-              width={"100%"}
-        >
-            <AuthorInfo/>
-            <Box height={"5px"}/>
-            <Flex direction={"row"}>
-                <Flex direction={"column"}
-                      align={"start"}
-                      width={"80%"}
-                >
-                    <PostTitle title={title}
-                    />
-                    <Box height={"5px"}/>
-                    <PostContent content={content}
-                    />
-                    <Box height={"15px"}/>
-                    <PostCreatedAt createdAt={createdAt}
-                    />
-                </Flex>
-                <Box width={"15px"}/>
-                <AspectRatio ratio={1}
-                             maxW={"120px"}
-                             width={"25%"}
-                >
-                    <Image src={thumbUrl}
-                           alt="thumbnail"
-                           boxSize={"100%"}
-                    />
-                </AspectRatio>
-            </Flex>
-            <Box height={"5px"}/>
-        </Flex>
-    );
-};
-
-function AuthorInfo() {
-
-    const authorFontSize = useBreakpointValue({base: "xs", md: "xs", lg: "md"});
+    const postCardBg = useColorModeValue(commonTheme.white, darkTheme.secondaryBlack);
+    const postCardBorderColor = useColorModeValue(lightTheme.secondaryWhite, darkTheme.thirdBlack);
 
     return (
-        <Flex direction="row"
-              align="start"
+        <Box paddingX={"24px"}
+             paddingY={"24px"}
+             bg={postCardBg}
+             width={"100%"}
+             height={"100%"}
+             borderRadius={"lg"}
+             border={`3px solid ${isAdmin ? "#EDF2F7" : postCardBorderColor}`}
         >
-            <Image src={profileConfig.represent}
-                   alt={"Profile Picture"}
-                   boxSize={"21.5px"}
-                   borderRadius={"full"}
-            />
-            <Box width={"7.5px"}/>
-            <Text fontSize={authorFontSize}
-                  lineHeight={"18.5px"}
+            <Flex direction={"column"}
+                  width={"100%"}
+                  height={"100%"}
             >
-                {profileConfig.name}
-            </Text>
-        </Flex>
+                <PostThumbnail thumbUrl={thumbUrl}/>
+                <PostTitle title={title}/>
+                <Box height={"5px"}/>
+                <PostContentPreview content={content}/>
+                <Box height={"5px"}/>
+                <PostCreatedAt createdAt={createdAt}/>
+            </Flex>
+        </Box>
+    );
+
+}
+
+function PostThumbnail({thumbUrl}) {
+
+    const isDefault = thumbUrl === "https://hello-blog-api-dev-server-bucket.s3.ap-northeast-2.amazonaws.com/default/post_thumbnail_default.png";
+
+    return (
+        isDefault ? null : <Box>
+            <AspectRatio ratio={16 / 9}
+                         width={"100%"}
+            >
+                <Image src={thumbUrl}
+                       alt="thumbnail"
+                       boxSize={"100%"}
+                       borderRadius={"lg"}
+                       objectFit="contain"
+                />
+            </AspectRatio>
+            <Box height={"15px"}/>
+        </Box>
     );
 
 }
 
 function PostTitle({title}) {
 
-    const postTitleFontSize = useBreakpointValue({base: "xl", md: "xl", lg: "25px"});
+    const postTitleColor = useColorModeValue(lightTheme.primaryBlack, darkTheme.primaryWhite);
 
     return (
-        <Text fontSize={postTitleFontSize}
-              fontWeight={"bold"}
+        <Text color={postTitleColor}
+              fontSize={"2xl"}
+              fontWeight={"extrabold"}
+              whiteSpace={"normal"}
               wordBreak={"break-all"}
         >
             {title}
@@ -84,43 +74,47 @@ function PostTitle({title}) {
 
 }
 
-function PostContent({content}) {
+function PostContentPreview({content}) {
 
-    const contentFontSize = useBreakpointValue({base: "md", md: "md", lg: "15px"});
+    const plainText = extractPlainText(content);
+
+    const postContentColor = useColorModeValue(lightTheme.secondaryBlack, darkTheme.secondaryWhite);
+    const postContentFontWeight = useColorModeValue("medium", "semibold");
 
     return (
-        <Text fontSize={contentFontSize}
-              color={"gray.700"}
-              noOfLines={2}
+        <Text color={postContentColor}
+              fontSize={"sm"}
+              fontWeight={postContentFontWeight}
+              whiteSpace={"normal"}
               wordBreak={"break-all"}
+              overflow={"hidden"}
+              textOverflow={"ellipsis"}
+              sx={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: "2",
+                  WebkitBoxOrient: "vertical",
+              }}
         >
-            {content}
+            {plainText}
         </Text>
     );
 
 }
 
-function PostCreatedAt({createdAt}) {
+export function PostCreatedAt({createdAt}) {
 
-    const createdAtFontSize = useBreakpointValue({base: "xs", md: "xs", lg: "xs"});
+    const postCreatedAtColor = useColorModeValue(lightTheme.secondaryBlack, darkTheme.primaryWhite);
+    const postCreatedAtFontWeight = useColorModeValue("medium", "semibold");
 
     return (
-        <Flex>
-            <FontAwesomeIcon icon={faClock}
-                             fontSize={"12.5px"}
-                             color={"#a0a0a0"}
-            />
-            <Box width={"7.5px"}/>
-            <Text color={"#a0a0a0"}
-                  fontSize={createdAtFontSize}
-                  lineHeight={"13.75px"}
-            >
-                {createdAt.match(/\d{4}-\d{2}-\d{2}/)[0]}
-            </Text>
-        </Flex>
+        <Text color={postCreatedAtColor}
+              fontSize={"sm"}
+              fontWeight={postCreatedAtFontWeight}
+        >
+            {formatLocalDateTime(createdAt)}
+        </Text>
     );
 
 }
 
 export default PostCard;
-

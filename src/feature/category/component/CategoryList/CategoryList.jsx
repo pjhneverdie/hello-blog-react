@@ -1,129 +1,92 @@
 import React, {useEffect} from "react";
 
-import {AspectRatio, Box, Flex, Grid, IconButton, Skeleton, Text, useBreakpointValue} from "@chakra-ui/react";
+import {
+    Box,
+    Grid,
+    Skeleton,
+    IconButton,
+    AspectRatio,
+    useBreakpointValue, useColorModeValue
+} from "@chakra-ui/react";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft, faDoorOpen} from "@fortawesome/free-solid-svg-icons";
 
 import {useCategoryApi} from "../../hook/useCategoryApi";
+import {commonTheme, darkTheme, lightTheme} from "../../../../config/theme/Theme";
+import CategoryCard from "../CategoryCard/CategoryCard";
 
 function CategoryList({categories, setCategories, selectedCategory, handleSelectCategory, popCategory}) {
+
+    const popButtonVisibility = useBreakpointValue({base: false, sm: true, md: true, lg: true});
+    const floatingActionButtonVisibility = useBreakpointValue({base: true, sm: false, md: false, lg: false});
+
+    const startSkeletonColor = useColorModeValue(lightTheme.secondaryBlack, darkTheme.secondaryBlack);
+    const endSkeletonColor = useColorModeValue(lightTheme.secondaryWhite, darkTheme.thirdBlack);
 
     const {isLoading, getRootCategories, getSubCategories} = useCategoryApi();
 
     useEffect(() => {
-
-        const fetchRootCategories = async () => {
+        const handleGetRootCategories = async () => {
             if (categories.length === 0) {
                 const rootCategories = await getRootCategories();
 
-                if(rootCategories.length !==0){
+                if (rootCategories.length !== 0) {
                     setCategories(rootCategories);
                 }
             }
         };
 
-        fetchRootCategories();
-
+        handleGetRootCategories();
     }, [categories]);
 
     useEffect(() => {
-
-        const fetchSubCategories = async () => {
+        const handleGetSubCategories = async () => {
             if (selectedCategory) {
                 const subCategories = await getSubCategories(selectedCategory.id);
+
                 setCategories(subCategories);
             }
         };
 
-        fetchSubCategories();
-
+        handleGetSubCategories();
     }, [selectedCategory]);
 
-
-    const popButtonVisibility = useBreakpointValue({base: false, md: true, lg: true});
-
-    const floatingActionButtonVisibility = useBreakpointValue({base: true, md: false, lg: false});
-
     return (
-        <Box>
+        <Box marginTop={"15px"}
+             width={"100%"}
+             height={"100%"}
+        >
             {isLoading ? (
-                <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+                <Grid templateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
                       gap={4}
                 >
                     {Array(6).fill("").map((_, index) => (
-                        <Skeleton key={index}
-                                  height="200px"
-                                  startColor={"blackAlpha.200"}
-                                  endColor={"blackAlpha.500"}
-                        />
+                        <AspectRatio key={index}
+                                     ratio={16 / 9}
+                        >
+                            <Skeleton startColor={startSkeletonColor}
+                                      endColor={endSkeletonColor}
+                                      height={"200px"}
+                                      borderRadius={"lg"}
+                            />
+                        </AspectRatio>
                     ))}
                 </Grid>
             ) : (
-                <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+                <Grid templateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
                       gap={4}
                 >
                     {(selectedCategory && popButtonVisibility) && (
-                        <Box sx={{
-                            padding: "15px",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            border: "1px solid #ddd",
-                            cursor: "pointer",
-                            '&:hover': {
-                                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                            },
-                        }}
-                             onClick={popCategory}
-                        >
-                            <FontAwesomeIcon icon={faDoorOpen}
-                                             color={"#e78413"}
-                                             fontSize={"25px"}
-
-                            />
-                        </Box>
+                        <PopButton popCategory={popCategory}/>
                     )}
                     {categories.map((category) => (
-                        <Box key={category.id}
-                             sx={{
-                                 display: 'flex',
-                                 flexDirection: 'column',
-                                 alignItems: 'center',
-                                 border: '1px solid #ddd',
-                                 cursor: 'pointer',
-                                 '&:hover': {
-                                     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                                 },
-                             }}
-                             onClick={() => handleSelectCategory(category)}
-                        >
-                            <AspectRatio ratio={16 / 9}
-                                         width={"100%"}
-                            >
-                                <Box position={"relative"}
-                                     textAlign="center"
-                                >
-                                    <img src={category.thumbUrl}
-                                         alt={category.name}
-                                         style={{
-                                             objectFit: 'cover',
-                                         }}
-                                    />
-                                </Box>
-                            </AspectRatio>
-                            <Flex flex={1}
-                                  direction={"column"}
-                                  justify={"center"}
-                            >
-                                <Text padding={"5px"}
-                                      textAlign={"center"}
-                                >
-                                    {category.id === selectedCategory?.id ? `${category.postCount}개의 게시글` : category.name}
-                                </Text>
-                            </Flex>
-                        </Box>
+                        category.id === selectedCategory?.id && selectedCategory.postCount === 0 ? null :
+                            <CategoryCard key={category.id}
+                                          category={category}
+                                          selectedCategory={selectedCategory}
+                                          handleSelectCategory={handleSelectCategory}
+                            />
                     ))}
                 </Grid>
             )}
@@ -136,21 +99,49 @@ function CategoryList({categories, setCategories, selectedCategory, handleSelect
 
 }
 
+function PopButton({popCategory}) {
+
+    const popButtonBorderColor = useColorModeValue(commonTheme.orange, commonTheme.blue);
+    const popButtonIconColor = useColorModeValue(commonTheme.orange, commonTheme.blue);
+
+    return (
+        <Box display={"flex"}
+             flexDirection={"column"}
+             justifyContent={"center"}
+             alignItems={"center"}
+             border={`1px solid ${popButtonBorderColor}`}
+             borderRadius={"lg"}
+             cursor={"pointer"}
+             onClick={popCategory}
+        >
+            <FontAwesomeIcon icon={faDoorOpen}
+                             color={popButtonIconColor}
+                             fontSize={"25px"}
+            />
+        </Box>
+    );
+
+}
 
 function FloatingActionPopButton({popCategory}) {
 
+    const popButtonBg = useColorModeValue(lightTheme.primaryBlack, darkTheme.secondaryBlack);
+    const popButtonIconColor = useColorModeValue(lightTheme.primaryWhite, darkTheme.primaryWhite);
+
     return (
-        <IconButton
-            icon={<FontAwesomeIcon icon={faArrowLeft}/>}
-            colorScheme="blackAlpha"
-            aria-label="Go back"
-            position="fixed"
-            bottom="20px"
-            right="20px"
-            borderRadius="full"
-            size="lg"
-            boxShadow="lg"
-            onClick={popCategory}
+        <IconButton icon={
+            <FontAwesomeIcon icon={faArrowLeft}
+                             color={popButtonIconColor}
+            />
+        }
+                    position={"fixed"}
+                    bottom={"20px"}
+                    right={"20px"}
+                    bg={popButtonBg}
+                    size={"lg"}
+                    borderRadius={"full"}
+                    aria-label={"back"}
+                    onClick={popCategory}
         />
     );
 

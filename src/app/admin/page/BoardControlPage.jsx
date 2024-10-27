@@ -47,7 +47,6 @@ function BoardControlPage() {
      * 카테고리 선택
      */
     const handleSelectCategory = (id, name, thumbUrl, parentId, createdAt, postCount, isParent) => {
-
         setSelectedCategory({
             id: id,
             name: name,
@@ -58,14 +57,12 @@ function BoardControlPage() {
         });
 
         setIsPostController(isParent);
-
     };
 
     /**
      * 카테고리 삭제
      */
     async function handleDeleteCategory() {
-
         const result = await deleteCategory(
             {
                 id: selectedCategory.id,
@@ -83,14 +80,12 @@ function BoardControlPage() {
                 postCount: null,
             });
         }
-
     }
 
     /**
      * 에디터 초기화
      */
     async function handleClearCategoryCache() {
-
         await clearCategoryCache();
 
         setSelectedCategory({
@@ -103,7 +98,6 @@ function BoardControlPage() {
         });
 
         setIsPostController(false);
-
     }
 
     /**
@@ -111,7 +105,6 @@ function BoardControlPage() {
      * !**! 하위 카테고리는 CategorySelector에서 동기화 중 !**!
      */
     useEffect(() => {
-
         if (selectedCategory.id && rootCategories.length > 0) {
             const updatedRootCategory = rootCategories.find(category => category.id === selectedCategory.id);
             if (updatedRootCategory) {
@@ -125,15 +118,14 @@ function BoardControlPage() {
                 });
             }
         }
-
     }, [rootCategories]);
 
     return (
-        <Box minW={"999px"}
+        <Box bg={"#f7f9fc"}
              width={"100%"}
              height={"100%"}
+             minW={"999px"}
              overflow={"scroll"}
-             background={"#f7f9fc"}
         >
             <Flex paddingX={"7.5%"}
                   paddingY={"7.5%"}
@@ -169,6 +161,7 @@ function BoardControlPage() {
                                 addCategory={addCategory}
                                 updateCategory={updateCategory}
                                 handleDeleteCategory={handleDeleteCategory}
+                                setSelectedCategory={setSelectedCategory}
                     />
                 </Box>
             </Flex>
@@ -206,6 +199,7 @@ function Controller({
                         addCategory,
                         updateCategory,
                         handleDeleteCategory,
+                        setSelectedCategory,
                     }) {
 
     const [isExpanded, setIsExpanded] = useState(false);
@@ -239,6 +233,7 @@ function Controller({
                                       updateCategory={updateCategory}
                                       handleDeleteCategory={handleDeleteCategory}
                                       handleExtendControllerSize={handleExtendControllerSize}
+                                      setSelectedCategory={setSelectedCategory}
                 />}
         </Box>
     );

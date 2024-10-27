@@ -2,8 +2,13 @@ import React from 'react';
 
 import {Box} from "@chakra-ui/react";
 
-import {Editor} from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/toastui-editor.css';
+import {Editor} from "@toast-ui/react-editor";
+import "@toast-ui/editor/dist/toastui-editor.css";
+
+import codeSyntaxHighlight
+    from "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all";
+
+import "prismjs/themes/prism.css";
 
 function PostEditor({markRef, handleUploadContentImageAsTemp}) {
 
@@ -27,6 +32,7 @@ function PostEditor({markRef, handleUploadContentImageAsTemp}) {
                     hooks={{
                         addImageBlobHook: handleUploadContentImageAsTemp,
                     }}
+                    plugins={[codeSyntaxHighlight]}
             />
             <style>
                 {`
@@ -59,16 +65,15 @@ function PostEditor({markRef, handleUploadContentImageAsTemp}) {
                         margin-right: auto;
                         object-fit: contain; 
                     }
-                    .toastui-editor-contents h1, .toastui-editor-contents h2 {
+                    .toastui-editor-contents p,
+                    .toastui-editor-contents h1, .toastui-editor-contents h2,
+                    .toastui-editor-contents h3, .toastui-editor-contents h4,
+                    .toastui-editor-contents h5, .toastui-editor-contents h6 {
                         border-bottom: none !important;
+                        color: #1e1e1e !important;
                     }
                     .toastui-editor-contents {
-                        margin: 0;
-                        padding: 0;
-                        font-size: 17.5px;
-                        font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', '나눔바른고딕',
-                            'Nanum Barun Gothic', '맑은고딕', 'Malgun Gothic', sans-serif;
-                        z-index: 20;
+                        font-weight: normal !important;
                     }
                     .toastui-editor-md-list-item-style.toastui-editor-md-list-item-odd {
                         color: black !important;
@@ -109,6 +114,9 @@ function PostEditor({markRef, handleUploadContentImageAsTemp}) {
                     .toastui-editor-contents a:hover {
                         color: #01a9ff !important;
                     }
+                    .token.operator {
+                        background-color: transparent;
+                    }     
                 `}
             </style>
         </Box>

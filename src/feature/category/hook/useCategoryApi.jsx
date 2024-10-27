@@ -12,7 +12,6 @@ export const useCategoryApi = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const getRootCategories = async () => {
-
         try {
             setIsLoading(true);
 
@@ -27,11 +26,9 @@ export const useCategoryApi = () => {
         } finally {
             setIsLoading(false);
         }
-
     };
 
     const getSubCategories = async (parentId) => {
-
         if (parentId) {
             try {
                 setIsLoading(true);
@@ -50,7 +47,6 @@ export const useCategoryApi = () => {
         } else {
             await getRootCategories();
         }
-
     };
 
     return {

@@ -14,7 +14,6 @@ export function AuthProvider({children}) {
     const [member, setMember] = useState(null);
 
     async function me() {
-
         const storedMember = sessionStorage.getItem("member");
 
         if (sessionStorage.getItem("member")) {
@@ -32,11 +31,9 @@ export function AuthProvider({children}) {
                 setMember(null);
             }
         }
-
     }
 
     const signIn = async (email, password) => {
-
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -62,11 +59,9 @@ export function AuthProvider({children}) {
         }
 
         return false;
-
     };
 
     const signOut = async () => {
-
         try {
             await axios.get(`${BASE_URL}/member/signOut`);
         } catch (e) {
@@ -75,11 +70,9 @@ export function AuthProvider({children}) {
 
         sessionStorage.removeItem("member");
         setMember(null);
-
     };
 
     useEffect(() => {
-
         const handleMe = async () => {
             await me();
         };
@@ -91,7 +84,6 @@ export function AuthProvider({children}) {
                 signOut();
             }
         };
-
     }, []);
 
 

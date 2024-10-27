@@ -59,7 +59,6 @@ function PostController({selectedCategory, handleExtendControllerSize}) {
      * 탭 선택
      */
     const handleSelectTab = (index) => {
-
         if (index === 2) {
             return;
         }
@@ -67,25 +66,21 @@ function PostController({selectedCategory, handleExtendControllerSize}) {
         setSelectedPost(null);
         setTabIndex(index);
         handleExtendControllerSize(index > 0);
-
     };
 
     /**
      * 게시글 선택
      */
     const handleSelectPost = (post) => {
-
         setSelectedPost(post);
         setTabIndex(2);
         handleExtendControllerSize(true);
-
     };
 
     /**
      * 게시글 삭제
      */
     const handleDeletePost = async () => {
-
         const markdownContent = markRefForUpdate.current.getInstance().getMarkdown();
         const regex = /!\[content-image\]\((.*?)\)/g;
         const relatedUrls = [selectedPost.thumbUrl];
@@ -99,13 +94,10 @@ function PostController({selectedCategory, handleExtendControllerSize}) {
 
         handleSelectTab(0);
         setSelectedPost(null);
-
     };
 
     useEffect(() => {
-
         handleSelectTab(0);
-
     }, [selectedCategory]);
 
     return (
@@ -116,10 +108,12 @@ function PostController({selectedCategory, handleExtendControllerSize}) {
                                   handleDeletePost={handleDeletePost}
             />
             <Box height={"5px"}/>
-            <Tabs index={tabIndex}
+            <Tabs isLazy
+                  index={tabIndex}
                   onChange={handleSelectTab}
+                  borderColor={"#EDF2F7"}
             >
-                <PostControllerTabs/>
+                <PostControllerTabs tabIndex={tabIndex}/>
                 <PostControllerPanels tabIndex={tabIndex}
                                       markRefForSave={markRefForSave}
                                       markRefForUpdate={markRefForUpdate}
@@ -184,7 +178,7 @@ function PostControllerHeader({tabIndex, selectedPost, selectedCategory, handleD
 
 }
 
-function PostControllerTabs() {
+function PostControllerTabs({tabIndex}) {
 
     const tabStyles = {
         _focus: {},
@@ -199,11 +193,20 @@ function PostControllerTabs() {
             <Tab {...tabStyles}>
                 게시
             </Tab>
-            <Tab {...tabStyles}>
-                수정
-            </Tab>
+            {
+                tabIndex === 2 ?
+                    <Tab {...tabStyles}>
+                        수정
+                    </Tab> :
+                    <Tab isDisabled
+                         {...tabStyles}
+                    >
+                        수정
+                    </Tab>
+            }
         </TabList>
-    );
+    )
+        ;
 
 }
 
@@ -227,11 +230,9 @@ function PostControllerPanels({
 
 
     useEffect(() => {
-
         setPosts([]);
         setPage(1);
         setHasMore(true);
-
     }, [tabIndex]);
 
     return (
@@ -246,6 +247,7 @@ function PostControllerPanels({
                           setHasMore={setHasMore}
                           handleSelectPost={handleSelectPost}
                           url={`${BASE_URL}/post/category/${selectedCategory.id}`}
+                          isAdmin={true}
                 />
             </TabPanel>
             <TabPanel>

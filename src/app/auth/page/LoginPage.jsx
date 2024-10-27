@@ -4,18 +4,21 @@ import {
     Box,
     Flex,
     Text,
-    InputGroup,
-    InputLeftElement,
-    Input,
     Progress,
+    InputGroup, InputLeftElement, Input, useColorMode
 } from "@chakra-ui/react";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEnvelope, faLock} from "@fortawesome/free-solid-svg-icons";
 
 import {useAuth} from "../AuthContext";
+import {commonTheme} from "../../../config/theme/Theme";
 
-function AuthModal({modalRef, isModalOpen, setIsModalOpen}) {
+function LoginPage() {
+
+    const varForUI = {
+        backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='42' height='44' viewBox='0 0 42 44' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Page-1' fill='none' fill-rule='evenodd'%3E%3Cg id='brick-wall' fill='%23edf2f7' fill-opacity='1'%3E%3Cpath d='M0 0h42v44H0V0zm1 1h40v20H1V1zM0 23h20v20H0V23zm22 0h20v20H22V23z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"
+    };
 
     const {signIn} = useAuth();
 
@@ -42,27 +45,34 @@ function AuthModal({modalRef, isModalOpen, setIsModalOpen}) {
         }
     }
 
-    if (!isModalOpen) return null;
-
     return (
-        <Box ref={modalRef}
-             px={"15px"}
-             position={"fixed"}
-             top={"10px"}
-             right={"20px"}
-             width={"300px"}
-             bg={"#22191b"}
-             borderRadius={"10px"}
+        <Box display={"flex"}
+             flexDirection={"column"}
+             justifyContent={"center"}
+             alignItems={"center"}
+             backgroundImage={varForUI.backgroundImage}
+             width={"100vw"}
+             height={"100vh"}
         >
             <Flex direction={"column"}
-                  justify={"start"}
-                  align={"stretch"}
-                  height={"100%"}
+                  justifyContent={"center"}
+                  alignItems={"stretch"}
+                  px={"10px"}
+                  bg={"white"}
+                  width={"100%"}
+                  maxW={"500px"}
+                  borderWidth={"2px"}
+                  borderRadius={"lg"}
             >
                 <Box h={"15px"}/>
                 <AuthModalHeader/>
                 <Box h={"10px"}/>
-                {isLoading ? <Progress size={"xs"} isIndeterminate/> : <Progress size={"xs"} value={0}/>}
+                {isLoading ? <Progress size={"xs"}
+                                       isIndeterminate
+                                       colorScheme={"orange"}
+                /> : <Progress value={0}
+                               size={"xs"}
+                />}
                 <Box h={"10px"}/>
                 <AuthForm idRef={idRef}
                           passwordRef={passwordRef}
@@ -80,25 +90,15 @@ function AuthModalHeader() {
 
     return (
         <Flex direction={"column"}>
-            <Text color={"#fde8ed"}
-                  fontSize={"15px"}
-            >
-                이메일을 사용해
-                <Text as={"span"}
-                      fontSize={"15px"}
-                      fontWeight={"extrabold"}
-                >
-                    로그인
-                </Text>
+            <Text fontSize={"15px"}>
+                이메일을 사용해 로그인
             </Text>
-            <Box h={"6.5px"}/>
+            <Box height={"6.5px"}/>
             <Flex direction={"row"}
-                  justify={"start"}
-                  align={"start"}
+                  justifyContent={"start"}
+                  alignItems={"start"}
             >
-                <Text fontSize={"12.5px"}
-                      color={"#fde8ed"}
-                >
+                <Text fontSize={"12.5px"}>
                     어드민 페이지입니다. 로그인해 주세요.
                 </Text>
             </Flex>
@@ -114,30 +114,40 @@ function AuthForm({idRef, passwordRef, onIdKeyDown, onPasswordKeyDown}) {
         <Flex direction={"column"}>
             <InputGroup>
                 <InputLeftElement
-                    children={<FontAwesomeIcon icon={faEnvelope}
-                                               color={"#fde8ed"}
-                    />}
+                    children={
+                        <FontAwesomeIcon icon={faEnvelope}
+                                         color={commonTheme.orange}
+                        />
+                    }
                 />
                 <Input ref={idRef}
-                       color={"#fde8ed"}
                        placeholder={"이메일"}
-                       _placeholder={{color: "#fde8ed"}}
                        onKeyDown={onIdKeyDown}
+                       _focus={
+                           {
+                               borderColor: commonTheme.orange
+                           }
+                       }
                 />
             </InputGroup>
             <Box h={"10px"}/>
             <InputGroup>
                 <InputLeftElement
-                    children={<FontAwesomeIcon icon={faLock}
-                                               color={"#fde8ed"}
-                    />}
+                    children={
+                        <FontAwesomeIcon icon={faLock}
+                                         color={commonTheme.orange}
+                        />
+                    }
                 />
                 <Input ref={passwordRef}
                        type={"password"}
-                       color={"#fde8ed"}
                        placeholder={"비밀번호"}
-                       _placeholder={{color: "#fde8ed"}}
                        onKeyDown={onPasswordKeyDown}
+                       _focus={
+                           {
+                               borderColor: commonTheme.orange
+                           }
+                       }
                 />
             </InputGroup>
         </Flex>
@@ -145,4 +155,4 @@ function AuthForm({idRef, passwordRef, onIdKeyDown, onPasswordKeyDown}) {
 
 }
 
-export default AuthModal;
+export default LoginPage;
